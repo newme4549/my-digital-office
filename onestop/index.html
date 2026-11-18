@@ -1079,6 +1079,9 @@ const esc=(s)=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').r
 
 function toast(msg){
   const t=$('#toast'); t.textContent=msg; t.classList.add('on');
+  const bar=$('#pickbar');
+  const lift = bar && !bar.hidden && window.matchMedia('(max-width:980px)').matches;
+  t.style.bottom = lift ? '152px' : '';
   clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('on'),2400);
 }
 function fmtTime(d){
