@@ -1826,7 +1826,7 @@ function approveMany(ids){
    ========================================================= */
 const LIVE_KEY='onestop-live-v2';
 let live={url:'',pin:'',remember:false,unlocked:false,user:'',canSend:false,pinSet:false,tz:'',title:'',
-  pending:null,sentToday:0,gap:0,history:[],sel:[],busy:false,checked:false,loading:false,msg:''};
+  pending:null,sentToday:0,gap:0,history:[],sel:[],busy:false,checked:false,loading:false,msg:'',lockErr:''};
 try{ const raw=localStorage.getItem(LIVE_KEY); if(raw){ const o=JSON.parse(raw)||{}; live.url=String(o.url||''); live.remember=!!o.remember; live.pin=(o.remember&&o.pin)?String(o.pin):''; } }catch(e){}
 
 function isLive(){ return !!(live.url && live.url.trim()); }
@@ -1948,10 +1948,10 @@ function renderAdminLive(){
     const cnt=$('#queueCount'); if(cnt){ cnt.textContent='PIN 필요'; cnt.classList.add('lock'); }
     const m=$('#lockMsg');
     if(m){
-      const msg = !live.checked
+      const dflt = !live.checked
         ? '위 [실사용 연동]에서 웹 앱 URL을 저장하고 [연결 확인]을 먼저 눌러 주세요.'
         : (!live.pinSet ? 'Apps Script에서 onestopSetup을 한 번 실행해 관리자 PIN을 만든 뒤 입력해 주세요.' : 'PIN을 넣고 [열기]를 누르면 시트의 대기 건을 불러옵니다.');
-      m.textContent=msg; m.className='liveinfo'+((live.checked&&live.pinSet)?'':'');
+      m.textContent=live.lockErr||dflt; m.className='liveinfo'+(live.lockErr?' err':'');
     }
     const lp=$('#lockPin'); if(lp && !lp.value) lp.value=live.pin||'';
     updateBadge();
@@ -2041,8 +2041,8 @@ async function loadPending(){
     if(!r.ok){
       const m=$('#lockMsg');
       if(r.code==='pin'||r.code==='no_pin'||r.code==='locked'){
-        live.unlocked=false; live.pending=null;
-        if(m){ m.textContent=r.error||'PIN을 확인해 주세요.'; m.className='liveinfo err'; }
+        live.unlocked=false; live.pending=null; live.lockErr=r.error||'PIN을 확인해 주세요.';
+        renderAdminLive(); return false;
       } else {
         live.pending=[]; live.msg=r.error||'대기 목록을 불러오지 못했습니다.';
       }
@@ -2050,7 +2050,7 @@ async function loadPending(){
     }
     live.pending=r.applications||[];
     live.sentToday=r.sentToday||0; live.gap=r.rawGap||0; live.canSend=!!r.canSend; live.tz=r.timezone||live.tz;
-    live.unlocked=true; live.msg='';
+    live.unlocked=true; live.msg=''; live.lockErr='';
     renderAdminLive(); return true;
   }catch(e){
     live.pending=[]; live.msg=e.message||'연결하지 못했습니다.';
@@ -2068,7 +2068,7 @@ async function openLiveLock(){
   const input=$('#lockPin');
   const pin=input?String(input.value||'').trim():'';
   if(!/^\d{4,12}$/.test(pin)){ const m=$('#lockMsg'); if(m){ m.textContent='PIN은 숫자 4~12자리입니다.'; m.className='liveinfo err'; } return; }
-  live.pin=pin;
+  live.pin=pin; live.lockErr='';
   const ok=await loadPending();
   if(ok){ if(live.remember) saveLiveCfg(); renderLiveBox(); loadHistory(); }
 }
@@ -2164,7 +2164,7 @@ function renderMailLive(){
     const rem=$('#liveRemember').checked;
     if(url && !/^https:\/\/script\.google\.com\/.+/.test(url)){ setLiveInfo('웹 앱 주소는 https://script.google.com/…/exec 형식이어야 합니다.','err'); toast('주소 형식을 확인해 주세요.'); return; }
     const wasAdmin=(state.view==='admin');
-    live.url=url; live.pin=pin; live.remember=rem; live.unlocked=false; live.pending=null; live.checked=false; live.sel=[];
+    live.url=url; live.pin=pin; live.remember=rem; live.unlocked=false; live.pending=null; live.checked=false; live.sel=[]; live.lockErr='';
     if(rem) saveLiveCfg(); else { try{ localStorage.removeItem(LIVE_KEY); }catch(e){} }
     renderLiveBox(); updateBadge(); renderAdmin();
     if(isLive()){
@@ -2185,7 +2185,7 @@ function renderMailLive(){
   });
   const off=$('#liveOff');
   if(off) off.addEventListener('click',()=>{
-    live.url=''; live.pin=''; live.remember=false; live.unlocked=false; live.pending=null; live.checked=false; live.sel=[];
+    live.url=''; live.pin=''; live.remember=false; live.unlocked=false; live.pending=null; live.checked=false; live.sel=[]; live.lockErr='';
     try{ localStorage.removeItem(LIVE_KEY); }catch(e){}
     renderLiveBox(); renderLists(); renderAdmin(); updateBadge();
     setLiveInfo('시연 모드로 동작합니다.'); toast('시연 모드로 바꿨습니다.');
