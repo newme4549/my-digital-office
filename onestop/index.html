@@ -522,6 +522,35 @@
     .p2foot .btn{flex:1 1 100%}
     .p2foot .prog{flex:1 1 100%}
   }
+
+  /* ---------- 실사용 연동 (Apps Script) ---------- */
+  .modechip{display:inline-block;margin-right:9px;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);border:1px solid #C4D3C9;font-size:11px;letter-spacing:.02em;vertical-align:1px}
+  .livebox{border:1px solid var(--line);background:var(--card);margin:0 0 26px}
+  .livebox>summary{display:flex;align-items:center;gap:10px;padding:13px 16px;cursor:pointer;list-style:none;font-size:13px}
+  .livebox>summary::-webkit-details-marker{display:none}
+  .livebox>summary::after{content:'\25BE';margin-left:auto;color:var(--faint);font-size:11px}
+  .livebox[open]>summary::after{content:'\25B4'}
+  .livebox>summary .lbl{font-weight:600;color:var(--ink)}
+  .livebox>summary .val{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .livebox[open]>summary .val{margin-left:0}
+  .livebody{padding:2px 16px 18px;border-top:1px solid var(--line)}
+  .liverow{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:12px 0}
+  .liverow>label{flex:0 0 84px;font-size:12px;color:var(--muted)}
+  .liverow input[type=url],.liverow input[type=password],.liverow input[type=text]{
+    flex:1 1 240px;min-width:0;height:38px;padding:0 11px;border:1px solid var(--line-2);background:#fff;
+    font:inherit;font-size:13px;color:var(--ink);border-radius:2px}
+  .liverow input:focus{outline:2px solid #2C5647;outline-offset:1px;border-color:transparent}
+  .liverow .check{flex:0 0 auto}
+  .liveinfo{margin:10px 0 0;font-size:11.5px;line-height:1.75;color:var(--muted);white-space:pre-line}
+  .liveinfo.err{color:var(--signal)}
+  .liveinfo.ok{color:var(--accent)}
+  .lockbox{border:1px solid var(--line);background:var(--card);padding:20px 18px 4px;margin:6px 0 24px}
+  .lockhead{display:flex;gap:12px;align-items:flex-start;margin-bottom:4px}
+  .lockhead .lockicon{font-size:17px;line-height:1.3}
+  .lockhead b{font-size:15px}
+  .lockhead p{margin:5px 0 0;font-size:12.5px;color:var(--muted);line-height:1.65}
+  .qhead .n.lock{color:var(--signal)}
+  .liveempty{border:1px solid var(--line);border-style:dashed;padding:26px 18px;text-align:center;color:var(--muted);font-size:13px}
 </style>
 </head>
 <body>
@@ -532,7 +561,7 @@
     <span class="slash">/</span>
     <span class="sub">원스탑</span>
   </a>
-  <div class="topmeta">수요라이브 12차 · 2026.11.18 수</div>
+  <div class="topmeta"><span class="modechip" id="modeChip" hidden>실사용 연동</span>수요라이브 12차 · 2026.11.18 수</div>
   <div class="switch" role="tablist" aria-label="화면 전환">
     <button role="tab" id="tab-member" aria-selected="true" data-view="member">참여자</button>
     <button role="tab" id="tab-admin" aria-selected="false" data-view="admin">관리자 승인 <span class="badge" id="adminBadge">0</span></button>
@@ -710,12 +739,54 @@
   </aside>
 
   <section class="panel">
+    <details class="livebox" id="liveBox">
+      <summary>
+        <span class="lbl">실사용 연동 · Apps Script</span>
+        <span class="val" id="liveBoxState">시연 모드</span>
+      </summary>
+      <div class="livebody">
+        <p class="note" style="margin-top:12px">배포한 웹 앱 주소를 넣으면 실사용 모드로 바뀝니다. 주소를 비우면 지금처럼 시연 모드로 동작합니다.</p>
+        <div class="liverow">
+          <label for="liveUrl">웹 앱 URL</label>
+          <input id="liveUrl" type="url" inputmode="url" placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="liverow">
+          <label for="livePin">관리자 PIN</label>
+          <input id="livePin" type="password" inputmode="numeric" placeholder="숫자 4~12자리" autocomplete="off">
+          <label class="check"><input type="checkbox" id="liveRemember"><span>이 브라우저에 기억</span></label>
+        </div>
+        <div class="btn-row" style="margin-top:14px">
+          <button class="btn btn-primary" type="button" id="liveSave">저장</button>
+          <button class="btn btn-ghost" type="button" id="liveTest">연결 확인</button>
+          <div class="spacer"></div>
+          <button class="btn btn-quiet" type="button" id="liveOff">시연 모드로</button>
+        </div>
+        <p class="liveinfo" id="liveInfo">아직 연결하지 않았습니다.</p>
+      </div>
+    </details>
+
+    <div class="lockbox" id="adminLock" hidden>
+      <div class="lockhead">
+        <span class="lockicon">🔒</span>
+        <div>
+          <b>관리자 PIN이 필요합니다</b>
+          <p>승인 대기함에는 참여자 이름과 이메일이 들어 있습니다. PIN을 넣어야 열립니다.</p>
+        </div>
+      </div>
+      <div class="liverow">
+        <label for="lockPin">관리자 PIN</label>
+        <input id="lockPin" type="password" inputmode="numeric" autocomplete="off" placeholder="관리자 PIN">
+        <button class="btn btn-primary" type="button" id="lockOpen">열기</button>
+      </div>
+      <p class="liveinfo" id="lockMsg"></p>
+    </div>
+
     <div id="adminAlarm"></div>
     <p class="eyebrow"><span class="dot"></span>관리자 — 승인</p>
     <h1>승인 대기함</h1>
     <p class="lead">새 전자책 신청이 들어오면 피클이 여기에 알람을 띄웁니다. 여러 건을 골라 한 번에 승인하면 지메일 발송과 기록까지 함께 끝납니다.</p>
 
-    <div class="qhead">
+    <div class="qhead" id="adminHead">
       <span class="n" id="queueCount">대기 0건</span>
       <span class="n" id="queueHint">자동발송 꺼짐 · 사람이 승인한 건만 발송</span>
     </div>
@@ -1085,7 +1156,7 @@ function pickableLectures(){
 function selLectures(){
   return pickableLectures().filter(l=>state.selected.includes(l.id));
 }
-function appOf(id){ return state.apps.find(a=>a.lecture===id) || null; }
+function appOf(id){ return state.apps.find(a=>a.lecture===id && (isLive()? !!a.live : !a.live)) || null; }
 function pendingApps(){ return state.apps.filter(a=>!a.sentAt); }
 function sentApps(){ return state.apps.filter(a=>a.sentAt); }
 
@@ -1138,9 +1209,7 @@ function rowHTML(l){
   if(l.free) acts.push(`<a href="${l.free}" target="_blank" rel="noopener">무료 신청</a>`);
   if(l.paid) acts.push(`<a class="mute" href="${l.paid}" target="_blank" rel="noopener">유료 신청</a>`);
   const on=state.selected.includes(l.id);
-  const tag=l.ebook
-    ? (l.ebook.demo ? `<span class="tag demo">전자책 시연용</span>` : `<span class="tag ready">전자책 ${l.ebook.version}</span>`)
-    : `<span class="tag">전자책 준비 중</span>`;
+  const tag=ebookTag(l);
   return `<div class="row pick${on?' sel':''}" data-row="${l.id}">
     <label class="pickbox" for="pk-${l.id}"><input type="checkbox" id="pk-${l.id}" data-pick="${l.id}" ${on?'checked':''} aria-label="${esc(l.title)} 선택"></label>
     <div class="when"><b>${l.md}</b>${l.dow} · ${l.round||l.program}</div>
@@ -1434,6 +1503,7 @@ function appId(){
 function appStatusTag(a){
   if(!a) return '<span class="tag">미신청</span>';
   if(a.sentAt) return '<span class="tag ready">발송</span>';
+  if(a.liveStatus) return `<span class="tag wait">${esc(a.liveStatus)}</span>`;
   return '<span class="tag wait">승인 대기</span>';
 }
 function renderApply(){
@@ -1497,6 +1567,7 @@ $('#applyForm').addEventListener('submit',e=>{
   if(!$('#fConsent').checked){ toast('개인정보 수집·이용 동의가 필요합니다.'); return; }
   const missing=selLectures().filter(l=>!appOf(l.id));
   if(!missing.length){ toast('이미 모두 신청되어 있습니다.'); return; }
+  if(isLive()){ submitLive(missing); return; }
   const at=fmtTime(new Date());
   missing.forEach(l=>{
     state.apps.push({
@@ -1526,6 +1597,7 @@ function mailBody(l,a){
 }
 let mailSel=null;
 function renderMail(){
+  if(isLive()){ renderMailLive(); return; }
   const area=$('#mailArea');
   const ls=selLectures().filter(l=>appOf(l.id));
   if(!ls.length){
@@ -1616,10 +1688,18 @@ function renderMail(){
 let adminSel=[];
 let adminOpen=new Set();
 function updateBadge(){
+  const b0=$('#adminBadge');
+  if(isLive()){
+    const n=live.pending?live.pending.length:0;
+    if(b0){ b0.textContent = live.pending? String(n) : '·'; b0.classList.toggle('on', n>0); }
+    return;
+  }
   const n=pendingApps().length;
   const b=$('#adminBadge'); b.textContent=n; b.classList.toggle('on', n>0);
 }
 function renderAdmin(){
+  if(isLive()){ renderAdminLive(); return; }
+  const hideLive=document.getElementById('adminLock'); if(hideLive) hideLive.hidden=true;
   const pend=pendingApps();
   adminSel=adminSel.filter(id=>pend.some(a=>a.id===id));
   $('#adminAlarm').innerHTML = pend.length
@@ -1741,6 +1821,379 @@ function approveMany(ids){
 }
 
 /* =========================================================
+   실사용 연동 — Apps Script 웹 앱 (시연 모드와 겸용)
+   ========================================================= */
+const LIVE_KEY='onestop-live-v2';
+let live={url:'',pin:'',remember:false,unlocked:false,user:'',canSend:false,pinSet:false,tz:'',title:'',
+  pending:null,sentToday:0,gap:0,history:[],sel:[],busy:false,checked:false,loading:false,msg:''};
+try{ const raw=localStorage.getItem(LIVE_KEY); if(raw){ const o=JSON.parse(raw)||{}; live.url=String(o.url||''); live.remember=!!o.remember; live.pin=(o.remember&&o.pin)?String(o.pin):''; } }catch(e){}
+
+function isLive(){ return !!(live.url && live.url.trim()); }
+function saveLiveCfg(){ try{ localStorage.setItem(LIVE_KEY, JSON.stringify({url:live.url,remember:live.remember,pin:live.remember?live.pin:''})); }catch(e){} }
+function tzLabel(){ return live.tz==='Asia/Shanghai'?'중국 시각':(live.tz==='Asia/Seoul'?'한국 시각':(live.tz||'')); }
+function setLiveInfo(text,cls){ const el=$('#liveInfo'); if(!el) return; el.textContent=text; el.className='liveinfo'+(cls?' '+cls:''); }
+
+function ebookTag(l){
+  if(isLive()){
+    return l.liveGiftReady ? `<span class="tag ready">전자책 설정됨</span>` : `<span class="tag">전자책 미설정</span>`;
+  }
+  if(!l.ebook) return `<span class="tag">전자책 준비 중</span>`;
+  if(l.ebook.demo) return `<span class="tag demo">전자책 시연용</span>`;
+  return `<span class="tag ready">전자책 ${esc(l.ebook.version)}</span>`;
+}
+
+/* ---------- 통신 ---------- */
+function withTimeout(promise,ms,label){
+  return Promise.race([promise,new Promise((_,rej)=>setTimeout(()=>rej(new Error((label||'응답')+'이(가) '+Math.round(ms/1000)+'초 안에 오지 않았습니다.')),ms))]);
+}
+function jsonpApi(action,payload){
+  return new Promise((resolve,reject)=>{
+    const u=live.url.trim();
+    const cb='onestopCb'+Date.now().toString(36)+Math.floor(Math.random()*1e4);
+    const q='action='+encodeURIComponent(action)+'&callback='+cb+'&payload='+encodeURIComponent(JSON.stringify(payload||{}))+'&_t='+Date.now();
+    const s=document.createElement('script');
+    let done=false;
+    const cleanup=()=>{ if(s.parentNode) s.parentNode.removeChild(s); try{ delete window[cb]; }catch(e){ window[cb]=undefined; } };
+    window[cb]=data=>{ done=true; cleanup(); resolve(data); };
+    s.onerror=()=>{ if(done) return; cleanup(); reject(new Error('Apps Script에 연결하지 못했습니다.')); };
+    s.src=u+(u.indexOf('?')>=0?'&':'?')+q;
+    document.head.appendChild(s);
+    setTimeout(()=>{ if(!done){ cleanup(); reject(new Error('응답이 없습니다.')); } },25000);
+  });
+}
+async function api(action,payload,opt){
+  opt=opt||{};
+  if(!live.url.trim()) throw new Error('웹 앱 URL이 등록되지 않았습니다.');
+  const body=JSON.stringify({action:action,payload:payload||{}});
+  let res=null,failed=null;
+  try{
+    res=await withTimeout(fetch(live.url.trim(),{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:body,redirect:'follow'}),opt.timeout||30000,'응답');
+  }catch(e){ failed=e; }
+  if(res){
+    const text=await res.text();
+    try{ return JSON.parse(text); }
+    catch(e){ throw new Error('응답을 읽지 못했습니다. 배포 액세스 권한이 "모든 사용자"인지 확인해 주세요.'); }
+  }
+  if(opt.jsonp){ try{ return await jsonpApi(action,payload); }catch(e2){ throw failed||e2; } }
+  throw failed||new Error('연결하지 못했습니다.');
+}
+
+/* ---------- 연결 ---------- */
+async function connectLive(quiet){
+  if(!live.url.trim()){ setLiveInfo('웹 앱 URL을 먼저 저장해 주세요.','err'); return false; }
+  setLiveInfo('연결을 확인하는 중입니다…');
+  try{
+    const ping=await api('ping',{},{jsonp:true,timeout:20000});
+    if(!ping.ok) throw new Error(ping.error||'연결 확인에 실패했습니다.');
+    live.checked=true; live.user=ping.user||''; live.canSend=!!ping.canSend; live.pinSet=!!ping.pinSet;
+    live.tz=ping.timezone||''; live.title=ping.sheetTitle||'';
+    try{
+      const meta=await api('meta',{},{jsonp:true,timeout:25000});
+      if(meta&&meta.ok&&Array.isArray(meta.lectures)) mergeLectures(meta.lectures);
+    }catch(e){}
+    renderLiveBox(); renderLists(); renderAdmin();
+    const bits=['시트: '+(live.title||'—'),'실행 계정: '+(live.user||'알 수 없음'),
+      '발송 권한: '+(live.canSend?'있음':'없음 — awesome@dtedu.co.kr 계정으로 배포해야 합니다'),
+      '관리자 PIN: '+(live.pinSet?'설정됨':'아직 없음 — Apps Script에서 onestopSetup 실행')];
+    setLiveInfo(bits.join('\n'), live.canSend?'ok':'');
+    if(!quiet) toast(live.canSend?'실사용 모드로 연결했습니다.':'연결됐지만 이 계정으로는 발송할 수 없습니다.');
+    return true;
+  }catch(e){
+    live.checked=false; renderLiveBox();
+    setLiveInfo(e.message||'연결하지 못했습니다.','err');
+    if(!quiet) toast('연결하지 못했습니다.');
+    return false;
+  }
+}
+
+function mergeLectures(list){
+  const today=new Date(); today.setHours(0,0,0,0);
+  (list||[]).forEach(m=>{
+    if(!m||!m.id) return;
+    const d=new Date(String(m.date||'')+'T12:00:00');
+    const valid=!isNaN(d.getTime());
+    let l=LECTURES[m.id];
+    if(!l){
+      if(!(m.giftReady&&valid&&d<=today)) return;   // 전자책이 준비된 회차만 목록에 더함
+      const days=Math.round((d-today)/86400000);
+      l={ id:m.id, date:m.date, md:`${d.getMonth()+1}.${String(d.getDate()).padStart(2,'0')}`, dow:'일월화수목금토'[d.getDay()],
+          program:m.program||'', round:m.round||'', title:m.title||'', paid:m.paid||null, free:m.free||null,
+          bucket: days===0?'today':(days<0?'past':'planned'), ebook:null };
+      LECTURES[m.id]=l;
+    }
+    l.liveGiftReady=!!m.giftReady; l.liveGiftName=m.giftName||''; l.autoSend=!!m.autoSend;
+    if(m.paid) l.paid=m.paid;
+    if(m.free) l.free=m.free;
+  });
+}
+
+function renderLiveBox(){
+  const chip=$('#modeChip'), stateEl=$('#liveBoxState'), urlEl=$('#liveUrl'), pinEl=$('#livePin'), rem=$('#liveRemember');
+  if(chip) chip.hidden=!isLive();
+  if(stateEl) stateEl.textContent=isLive()?(live.checked?(live.canSend?'실사용 · 발송 가능':'실사용 · 발송 권한 없음'):'실사용 · 연결 확인 필요'):'시연 모드';
+  if(urlEl && document.activeElement!==urlEl) urlEl.value=live.url||'';
+  if(pinEl && document.activeElement!==pinEl) pinEl.value=live.pin||'';
+  if(rem) rem.checked=!!live.remember;
+}
+
+/* ---------- 관리자 잠금 ---------- */
+function liveHideAdmin(hide){
+  ['adminHead','queueToolbar','queue','sentBox','adminAlarm'].forEach(id=>{ const el=document.getElementById(id); if(el) el.classList.toggle('hidden',hide); });
+  const lb=$('#adminLock'); if(lb) lb.hidden=!hide;
+}
+function renderAdminLive(){
+  if(!live.unlocked){
+    liveHideAdmin(true);
+    const cnt=$('#queueCount'); if(cnt){ cnt.textContent='PIN 필요'; cnt.classList.add('lock'); }
+    const m=$('#lockMsg');
+    if(m){
+      const msg = !live.checked
+        ? '위 [실사용 연동]에서 웹 앱 URL을 저장하고 [연결 확인]을 먼저 눌러 주세요.'
+        : (!live.pinSet ? 'Apps Script에서 onestopSetup을 한 번 실행해 관리자 PIN을 만든 뒤 입력해 주세요.' : 'PIN을 넣고 [열기]를 누르면 시트의 대기 건을 불러옵니다.');
+      m.textContent=msg; m.className='liveinfo'+((live.checked&&live.pinSet)?'':'');
+    }
+    const lp=$('#lockPin'); if(lp && !lp.value) lp.value=live.pin||'';
+    updateBadge();
+    return;
+  }
+  liveHideAdmin(false);
+  const list=live.pending||[];
+  const cnt=$('#queueCount'); if(cnt){ cnt.classList.remove('lock'); cnt.textContent=`대기 ${list.length}건`; }
+  const ready=list.filter(a=>a.giftReady&&a.consent&&a.status!=='보류');
+
+  $('#adminAlarm').innerHTML = list.length
+    ? `<div class="alarm"><span class="pulse"></span><p><b>승인 대기 ${list.length}건</b><br>${esc(list[0].at)} 접수 · ${esc(list[0].name)}(${esc(list[0].nick)})${list.length>1?` 외 ${list.length-1}건`:''} · 구글폼·앱 접수분을 함께 읽었습니다. 승인만 남았습니다.</p></div>`
+    : '';
+
+  const selReady=live.sel.filter(id=>ready.some(a=>a.id===id)).length;
+  $('#queueToolbar').innerHTML = list.length ? `
+    <div class="qbar">
+      <label class="selall"><input type="checkbox" id="liveSelAll" ${live.sel.length===list.length?'checked':''}> 전체 선택</label>
+      <span class="cnt">${live.sel.length}건 선택${selReady?` · 발송 가능 ${selReady}건`:''}</span>
+      <div class="spacer"></div>
+      <button class="btn btn-primary" type="button" id="liveApproveSel" ${(!selReady||live.busy)?'disabled':''}>${live.busy?'보내는 중…':`선택한 ${selReady}건 승인 및 발송`}</button>
+      <button class="btn btn-ghost" type="button" id="liveReload" ${live.busy?'disabled':''}>새로고침</button>
+    </div>
+    ${live.gap?`<p class="note">구글폼 원본(08)에 아직 09로 옮겨지지 않은 최근 응답이 ${live.gap}건 있습니다. 트리거 상태를 확인해 주세요.</p>`:''}
+    ${live.canSend?'':`<p class="note" style="color:var(--signal)">이 웹 앱은 ${esc(live.user||'다른 계정')} 계정으로 실행되어 발송할 수 없습니다. awesome@dtedu.co.kr 계정으로 배포해야 메일이 나갈 수 있습니다.</p>`}
+    ${live.msg?`<p class="note" style="color:var(--signal)">${esc(live.msg)}</p>`:''}
+  ` : '';
+
+  $('#queue').innerHTML = list.length ? list.map(a=>{
+    const checked=live.sel.includes(a.id);
+    const can=!!a.giftReady && !!a.consent && a.status!=='보류';
+    return `<div class="qrow${checked?' sel':''}" data-lq="${esc(a.id)}">
+      <div class="top">
+        <div class="pickbox" style="display:flex;align-items:flex-start"><input type="checkbox" data-lsel="${esc(a.id)}" ${checked?'checked':''} aria-label="선택"></div>
+        <div class="who-wrap">
+          <div class="who">${esc(a.name)}<span>${esc(a.nick)}</span></div>
+          <div class="sub">${esc(a.id)} · ${esc(a.at)} · ${esc(a.lecture||a.lectureId)} · ${esc(a.type)}${a.source?' · '+esc(a.source):''}</div>
+        </div>
+        <div class="state"><span class="tag wait">${esc(a.status||'접수')}</span><span class="chev">▾</span></div>
+      </div>
+      <div class="detail"><div class="detail-in">
+        <dl class="kv">
+          <dt>강의</dt><dd>${esc(a.lecture||a.lectureId)} — ${esc(a.title)}</dd>
+          <dt>전자책</dt><dd>${a.giftReady?esc(a.giftName||'전자책 링크 설정됨'):'11_자동화설정에 이 강의 전자책 링크가 없습니다'}</dd>
+          <dt>Gmail</dt><dd>${esc(a.email)}</dd>
+          <dt>후기 등록</dt><dd>${esc(a.reviewed||'—')}</dd>
+          <dt>대조 결과</dt><dd>${esc(a.match||'—')}${a.duplicate&&a.duplicate!=='정상'?' · '+esc(a.duplicate):''}${a.consent?' · 개인정보 동의 확인':' · 동의 확인 안 됨'}</dd>
+          ${a.error?`<dt>오류</dt><dd>${esc(a.error)}</dd>`:''}
+        </dl>
+        <div class="btn-row" style="margin-top:14px">
+          <button class="btn btn-primary" type="button" data-lapprove="${esc(a.id)}" ${(can&&!live.busy)?'':'disabled'}>승인 및 발송</button>
+          <button class="btn btn-ghost" type="button" data-lhold="${esc(a.id)}" ${live.busy?'disabled':''}>보류</button>
+          <div class="spacer"></div>
+          <span class="hint">발송하면 09_후기선물에 발송일시가 기록됩니다.</span>
+        </div>
+      </div></div>
+    </div>`;
+  }).join('') : `<div class="liveempty"><strong>대기 중인 신청이 없습니다</strong><br>참여자 탭 03에서 신청하면 이 자리에 바로 나타납니다.</div>`;
+
+  $$('[data-lq]').forEach(row=>{
+    row.querySelector('.top').addEventListener('click',e=>{ if(e.target.closest('input,button')) return; row.classList.toggle('open'); });
+  });
+  $$('[data-lsel]').forEach(cb=>{
+    cb.addEventListener('click',e=>e.stopPropagation());
+    cb.addEventListener('change',()=>{ const id=cb.dataset.lsel; if(cb.checked){ if(!live.sel.includes(id)) live.sel.push(id); } else { live.sel=live.sel.filter(x=>x!==id); } renderAdminLive(); });
+  });
+  const sa=$('#liveSelAll');
+  if(sa) sa.addEventListener('change',()=>{ live.sel = sa.checked? list.map(a=>a.id) : []; renderAdminLive(); });
+  const as=$('#liveApproveSel'); if(as) as.addEventListener('click',()=>approveLive(live.sel.slice()));
+  const rl=$('#liveReload'); if(rl) rl.addEventListener('click',()=>{ loadPending(); loadHistory(); });
+  $$('[data-lapprove]').forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation(); approveLive([b.dataset.lapprove]); }));
+  $$('[data-lhold]').forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation(); holdLive(b.dataset.lhold); }));
+  if(!$$('#queue .qrow.open').length){ const first=$('#queue .qrow'); if(first) first.classList.add('open'); }
+
+  const hist=live.history||[];
+  $('#sentBox').innerHTML = hist.length
+    ? `<h2 class="sec">최근 발송 <span class="n">${hist.length}건</span></h2>${hist.map(h=>`<div class="sentrow"><div>${esc(h.name)} · ${esc(h.nick)}<div class="meta">${esc(h.lectureId)} · ${esc(h.id)} · ${esc(h.sentAt)}</div></div><div class="okmark">${esc(h.status)}</div></div>`).join('')}`
+    : `<p class="note">발송 기록은 09_후기선물에서 읽어 옵니다. [새로고침]을 눌러 확인하세요.</p>`;
+  updateBadge();
+}
+
+/* ---------- 대기 목록·기록 ---------- */
+async function loadPending(){
+  if(!live.url.trim()) return false;
+  try{
+    const r=await api('pending',{pin:live.pin},{jsonp:true,timeout:30000});
+    if(!r.ok){
+      const m=$('#lockMsg');
+      if(r.code==='pin'||r.code==='no_pin'||r.code==='locked'){
+        live.unlocked=false; live.pending=null;
+        if(m){ m.textContent=r.error||'PIN을 확인해 주세요.'; m.className='liveinfo err'; }
+      } else {
+        live.pending=[]; live.msg=r.error||'대기 목록을 불러오지 못했습니다.';
+      }
+      renderAdminLive(); return false;
+    }
+    live.pending=r.applications||[];
+    live.sentToday=r.sentToday||0; live.gap=r.rawGap||0; live.canSend=!!r.canSend; live.tz=r.timezone||live.tz;
+    live.unlocked=true; live.msg='';
+    renderAdminLive(); return true;
+  }catch(e){
+    live.pending=[]; live.msg=e.message||'연결하지 못했습니다.';
+    renderAdminLive(); return false;
+  }
+}
+async function loadHistory(){
+  if(!live.url.trim()||!live.unlocked) return;
+  try{
+    const r=await api('history',{pin:live.pin},{jsonp:true,timeout:30000});
+    if(r&&r.ok){ live.history=r.sent||[]; renderAdminLive(); }
+  }catch(e){}
+}
+async function openLiveLock(){
+  const input=$('#lockPin');
+  const pin=input?String(input.value||'').trim():'';
+  if(!/^\d{4,12}$/.test(pin)){ const m=$('#lockMsg'); if(m){ m.textContent='PIN은 숫자 4~12자리입니다.'; m.className='liveinfo err'; } return; }
+  live.pin=pin;
+  const ok=await loadPending();
+  if(ok){ if(live.remember) saveLiveCfg(); renderLiveBox(); loadHistory(); }
+}
+
+/* ---------- 승인·보류 ---------- */
+async function approveLive(ids){
+  if(live.busy) return;
+  ids=(ids||[]).filter(Boolean);
+  if(!ids.length) return;
+  live.busy=true; live.msg=''; renderAdminLive();
+  try{
+    const r=await api('approve',{pin:live.pin,ids:ids},{timeout:180000});
+    if(!r.ok){ live.msg=r.error||'승인하지 못했습니다.'; toast(live.msg); }
+    else{
+      const sent=r.sent||0, failed=r.failed||0;
+      const fails=(r.results||[]).filter(x=>!x.ok);
+      live.msg=fails.length?fails.slice(0,3).map(x=>`${x.id}: ${x.message}`).join(' / '):'';
+      (r.results||[]).forEach(x=>{ if(x.ok){ const a=state.apps.find(y=>y.id===x.id); if(a){ a.sentAt=x.sentAt||fmtTime(new Date()); a.liveStatus='발송완료'; } } });
+      save();
+      toast(sent?`${sent}건 승인·발송 완료${failed?` · ${failed}건 실패`:''}`:(fails[0]?fails[0].message:'발송된 건이 없습니다.'));
+    }
+  }catch(e){ live.msg=e.message; toast(e.message); }
+  live.busy=false; live.sel=[];
+  await loadPending(); await loadHistory();
+  updateCounts(); renderMail();
+}
+async function holdLive(id){
+  if(live.busy||!id) return;
+  live.busy=true; renderAdminLive();
+  try{
+    const r=await api('hold',{pin:live.pin,id:id,reason:'원스탑 앱에서 보류'},{timeout:30000});
+    toast(r.ok?`${id}를 보류로 표시했습니다.`:(r.error||'보류하지 못했습니다.'));
+    if(!r.ok) live.msg=r.error||'';
+  }catch(e){ toast(e.message); live.msg=e.message; }
+  live.busy=false; live.sel=[];
+  await loadPending(); await loadHistory();
+}
+
+/* ---------- 참여자 신청 ---------- */
+async function submitLive(missing){
+  const payload={
+    name:$('#fName').value.trim(), nick:$('#fNick').value.trim(), email:$('#fMail').value.trim(),
+    type:$('#fType').value, reviewed:($('input[name=reviewed]:checked')||{}).value||'',
+    consent:true, lectures:missing.map(l=>l.id), source:'원스탑앱'
+  };
+  const btn=$('#submitApply');
+  if(btn){ btn.disabled=true; btn.textContent='시트로 보내는 중…'; }
+  try{
+    const r=await api('submit',payload,{timeout:60000});
+    if(!r.ok){ toast(r.error||'접수하지 못했습니다.'); return; }
+    const at=fmtTime(new Date());
+    (r.results||[]).forEach(item=>{
+      if(appOf(item.lectureId)) return;
+      state.apps.push({ live:true, id:item.id, lecture:item.lectureId, at, name:payload.name, nick:payload.nick,
+        mail:payload.email, type:payload.type, reviewed:payload.reviewed, sentAt:'', downloadedAt:'',
+        liveStatus:item['상태']||'접수', liveMatch:item['대조결과']||'', liveGift:!!item['전자책준비'] });
+    });
+    save(); renderApply(); renderMail(); updateCounts(); updateBadge();
+    const n=(r.results||[]).length;
+    toast(`${n}건을 구글 시트 09_후기선물에 접수했습니다. 류지연 님 승인을 기다립니다.`);
+    setStep(4);
+  }catch(e){ toast(e.message); }
+  finally{ if(btn){ btn.disabled=false; } renderApply(); }
+}
+
+/* ---------- 참여자 4단계 (실사용) ---------- */
+function renderMailLive(){
+  const area=$('#mailArea');
+  const ls=selLectures().filter(l=>appOf(l.id));
+  if(!ls.length){
+    area.innerHTML=`<div class="empty"><strong>아직 신청이 없습니다</strong>3단계에서 전자책을 신청하면 류지연 님이 승인한 뒤 지메일에 전자책이 도착합니다.</div>
+      <div class="btn-row" style="margin-top:16px"><button class="btn btn-ghost" type="button" data-goto="3">전자책 신청으로</button></div>`;
+    $$('[data-goto]',area).forEach(b=>b.addEventListener('click',()=>setStep(Number(b.dataset.goto))));
+    return;
+  }
+  const sent=ls.filter(l=>{const a=appOf(l.id); return a&&a.sentAt;}).length;
+  area.innerHTML=`<div class="btn-row" style="margin-bottom:12px"><span class="note" style="margin:0">접수 ${ls.length}건 · 발송 ${sent}건${tzLabel()?' · 시트 시간 '+tzLabel():''}</span></div>
+    <div class="applist">${ls.map(l=>{
+      const a=appOf(l.id)||{}; const ok=!!a.sentAt;
+      return `<div class="approw"><div class="t">${esc(l.md)} ${esc(l.program)} ${esc(l.round||'')} — ${esc(l.title)}
+        <div class="m">${esc(a.id||'')} · ${ok?('발송 완료 '+esc(a.sentAt)):'승인 대기 — 류지연 님이 승인하면 awesome@dtedu.co.kr에서 발송됩니다'}</div></div>
+        <div class="tagcol">${ok?'<span class="tag ready">발송</span>':`<span class="tag wait">${esc(a.liveStatus||'접수')}</span>`}</div></div>`;
+    }).join('')}</div>
+    <p class="note">실사용 모드에서는 이 화면의 신청이 09_후기선물에 바로 쌓이고, 승인과 동시에 실제 지메일이 발송됩니다.</p>`;
+}
+
+/* ---------- 설정 패널 ---------- */
+(function bindLiveUI(){
+  const save=$('#liveSave');
+  if(save) save.addEventListener('click',async ()=>{
+    const url=($('#liveUrl').value||'').trim();
+    const pin=($('#livePin').value||'').trim();
+    const rem=$('#liveRemember').checked;
+    if(url && !/^https:\/\/script\.google\.com\/.+/.test(url)){ setLiveInfo('웹 앱 주소는 https://script.google.com/…/exec 형식이어야 합니다.','err'); toast('주소 형식을 확인해 주세요.'); return; }
+    const wasAdmin=(state.view==='admin');
+    live.url=url; live.pin=pin; live.remember=rem; live.unlocked=false; live.pending=null; live.checked=false; live.sel=[];
+    if(rem) saveLiveCfg(); else { try{ localStorage.removeItem(LIVE_KEY); }catch(e){} }
+    renderLiveBox(); updateBadge(); renderAdmin();
+    if(isLive()){
+      const ok=await connectLive(false);
+      if(ok){ const box=$('#liveBox'); if(box) box.open=false; $('.livebox>summary').scrollIntoView({block:'center'}); }
+    } else {
+      setLiveInfo('시연 모드로 동작합니다. 주소를 넣으면 실사용으로 바뀝니다.');
+      renderLists(); renderAdmin();
+      if(wasAdmin) toast('시연 모드로 돌아왔습니다.');
+    }
+  });
+  const test=$('#liveTest');
+  if(test) test.addEventListener('click',()=>{
+    const url=($('#liveUrl').value||'').trim(); if(url) live.url=url;
+    const pin=($('#livePin').value||'').trim(); if(pin) live.pin=pin;
+    live.remember=$('#liveRemember').checked; if(live.remember) saveLiveCfg();
+    renderLiveBox(); connectLive(false);
+  });
+  const off=$('#liveOff');
+  if(off) off.addEventListener('click',()=>{
+    live.url=''; live.pin=''; live.remember=false; live.unlocked=false; live.pending=null; live.checked=false; live.sel=[];
+    try{ localStorage.removeItem(LIVE_KEY); }catch(e){}
+    renderLiveBox(); renderLists(); renderAdmin(); updateBadge();
+    setLiveInfo('시연 모드로 동작합니다.'); toast('시연 모드로 바꿨습니다.');
+  });
+  const lo=$('#lockOpen'); if(lo) lo.addEventListener('click',openLiveLock);
+  const lp=$('#lockPin'); if(lp) lp.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); openLiveLock(); } });
+})();
+
+/* =========================================================
    초기화
    ========================================================= */
 $('#resetBtn').addEventListener('click',()=>{
@@ -1757,7 +2210,9 @@ renderLists();
 bindTodayTap();
 syncPickbar();
 updateCounts();
+renderLiveBox();
 renderAdmin();
+if(isLive()) connectLive(true);
 updateBadge();
 setView(state.view==='admin'?'admin':'member');
 setStep(state.step || 1);
