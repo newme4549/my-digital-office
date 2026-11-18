@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>나의 디지털 사무실 · 원스탑</title>
+<style>
+  :root{
+    --paper:#FAF9F6;
+    --card:#FFFFFF;
+    --ink:#18181B;
+    --ink-2:#3B3B3C;
+    --muted:#6E6E68;
+    --faint:#9A9A93;
+    --line:#E5E5E0;
+    --line-2:#D8D8D2;
+    --accent:#2C5647;
+    --accent-soft:#EDF1EC;
+    --signal:#A2482B;
+    --sans:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans CJK KR","Malgun Gothic",system-ui,sans-serif;
+    --serif:"Nanum Myeongjo","Noto Serif CJK KR","Apple SD Gothic Neo",Georgia,serif;
+    --r:2px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:15px;line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+    letter-spacing:-0.005em;
+    word-break:keep-all;
+  }
+  input[type=radio],input[type=checkbox]{accent-color:#2C5647;width:16px;height:16px}
+  .check input{margin-right:2px}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+  ::selection{background:#DFE7DF}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:40;
+    display:flex;align-items:center;gap:20px;
+    padding:0 40px;height:66px;
+    background:rgba(250,249,246,.92);
+    backdrop-filter:saturate(120%) blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .brand{display:flex;align-items:baseline;gap:10px;min-width:0}
+  .brand .mark{font-family:var(--serif);font-size:16px;letter-spacing:0.01em;white-space:nowrap}
+  .brand .slash{color:var(--line-2)}
+  .brand .sub{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+  .topmeta{
+    margin-left:auto;font-size:12.5px;color:var(--muted);white-space:nowrap;
+    font-variant-numeric:tabular-nums;
+  }
+  .switch{display:flex;border:1px solid var(--line-2);border-radius:999px;padding:3px;background:var(--card)}
+  .switch button{
+    display:flex;align-items:center;gap:7px;
+    padding:7px 15px;border-radius:999px;
+    font-size:13px;color:var(--muted);white-space:nowrap;
+    transition:background .15s,color .15s;
+  }
+  .switch button[aria-selected="true"]{background:var(--ink);color:#fff}
+  .switch .badge{
+    display:none;min-width:17px;height:17px;padding:0 5px;border-radius:9px;
+    background:var(--signal);color:#fff;font-size:10.5px;line-height:17px;text-align:center;
+    font-variant-numeric:tabular-nums;
+  }
+  .switch .badge.on{display:inline-block}
+
+  /* ---------- shell ---------- */
+  .shell{
+    display:grid;grid-template-columns:232px minmax(0,1fr);gap:64px;
+    max-width:1160px;margin:0 auto;padding:44px 40px 96px;
+  }
+
+  /* ---------- rail ---------- */
+  .rail-label{
+    font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--faint);margin:0 0 14px;
+  }
+  .steps{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+  .steps li{border-bottom:1px solid var(--line)}
+  .steps button{
+    display:grid;grid-template-columns:30px 1fr;gap:6px;
+    width:100%;text-align:left;padding:15px 0 15px 2px;
+    color:var(--muted);
+  }
+  .steps .num{
+    font-size:11px;letter-spacing:.06em;color:var(--faint);
+    font-variant-numeric:tabular-nums;padding-top:3px;
+  }
+  .steps .t{font-size:14px;line-height:1.35;display:block}
+  .steps .d{font-size:11.5px;color:var(--faint);margin-top:2px;line-height:1.4}
+  .steps li.on button{color:var(--ink);padding-left:12px;position:relative}
+  .steps li.on button::before{
+    content:"";position:absolute;left:0;top:16px;bottom:16px;width:1.5px;background:var(--accent);
+  }
+  .steps li.on .num{color:var(--accent)}
+  .steps li.done .num::after{content:" ·";color:var(--accent)}
+
+  .rail-note{
+    margin-top:26px;padding:16px 16px 15px;background:var(--accent-soft);
+    border-radius:var(--r);
+  }
+  .rail-note p{margin:0;font-size:12.5px;line-height:1.65;color:#33473E}
+  .rail-note .k{display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#5C7768;margin-bottom:6px}
+
+  /* ---------- panel ---------- */
+  .panel{min-width:0;max-width:760px}
+  .eyebrow{
+    display:flex;align-items:center;gap:10px;
+    font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);
+    margin:0 0 10px;
+  }
+  .eyebrow .dot{width:4px;height:4px;border-radius:50%;background:var(--accent)}
+  h1{
+    font-size:clamp(23px,2.2vw,29px);font-weight:600;line-height:1.32;
+    letter-spacing:-0.022em;margin:0 0 12px;
+  }
+  .lead{color:var(--muted);margin:0 0 34px;max-width:620px;font-size:14.5px;line-height:1.7}
+
+  h2.sec{
+    font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);
+    font-weight:500;margin:38px 0 12px;padding-bottom:9px;border-bottom:1px solid var(--line);
+  }
+
+  /* ---------- buttons ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    min-height:42px;padding:0 18px;border-radius:var(--r);
+    font-size:13.5px;line-height:1;letter-spacing:-0.01em;
+    transition:background .15s,border-color .15s,color .15s,opacity .15s;
+    white-space:nowrap;
+  }
+  .btn-primary{background:var(--ink);color:#fff}
+  .btn-primary:hover{background:#000}
+  .btn-ghost{border:1px solid var(--line-2);color:var(--ink-2);background:var(--card)}
+  .btn-ghost:hover{border-color:var(--ink-2)}
+  .btn-quiet{padding:0;min-height:0;color:var(--accent);font-size:13px;border-bottom:1px solid #C4D3C9;border-radius:0;padding-bottom:2px}
+  .btn-quiet:hover{color:#1F4034;border-color:var(--accent)}
+  a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn[disabled]{opacity:.38;cursor:not-allowed}
+  .btn-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .btn-row .spacer{flex:1 1 auto}
+
+  /* ---------- today block ---------- */
+  .today{
+    border:1px solid var(--line-2);background:var(--card);
+    display:grid;grid-template-columns:104px minmax(0,1fr);
+  }
+  .today .date{
+    border-right:1px solid var(--line);padding:24px 18px;
+    display:flex;flex-direction:column;gap:2px;justify-content:flex-start;
+  }
+  .today .date .d1{font-family:var(--serif);font-size:25px;letter-spacing:-0.01em;font-variant-numeric:tabular-nums}
+  .today .date .d2{font-size:11px;letter-spacing:.1em;color:var(--muted);font-variant-numeric:tabular-nums}
+  .today .body{padding:24px 26px 22px}
+  .today h2{
+    font-size:19px;font-weight:600;letter-spacing:-0.02em;line-height:1.45;margin:0 0 12px;
+  }
+  .today .meta{font-size:12.5px;color:var(--muted);margin:0 0 4px;font-variant-numeric:tabular-nums}
+  .today .meta.tools{color:var(--faint);margin-bottom:20px}
+  .nw{white-space:nowrap}
+  .price-note{font-size:12px;color:var(--faint);margin:12px 0 0}
+
+  /* ---------- lists ---------- */
+  .list{border-top:1px solid var(--line)}
+  .row{
+    display:grid;grid-template-columns:92px minmax(0,1fr) auto auto;gap:18px;
+    align-items:center;padding:15px 2px;border-bottom:1px solid var(--line);
+    transition:background .15s;
+  }
+  .row:hover{background:rgba(255,255,255,.7)}
+  .tagcol{justify-self:end}
+  .tagcol:empty{display:none}
+  .row .when{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;letter-spacing:.01em}
+  .row .when b{display:block;font-weight:500;color:var(--ink);font-size:12.5px;letter-spacing:0}
+  .row .what{min-width:0}
+  .row .prog{font-size:11px;color:var(--faint);letter-spacing:.02em}
+  .row .title{font-size:14px;line-height:1.45;margin-top:2px}
+  .row .acts{display:flex;align-items:center;gap:14px;justify-self:end}
+  .row .acts a{font-size:12.5px;color:var(--accent);border-bottom:1px solid #C4D3C9;padding-bottom:1px}
+  .row .acts a.mute{color:#8C8C85;border-color:var(--line-2)}
+  .tag{font-size:10.5px;letter-spacing:.04em;color:var(--muted);border:1px solid var(--line-2);border-radius:999px;padding:2px 8px;white-space:nowrap}
+  .tag.ready{color:var(--accent);border-color:#C4D3C9;background:var(--accent-soft)}
+
+  /* ---------- form ---------- */
+  .field{margin-bottom:20px}
+  .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:7px;letter-spacing:.01em}
+  .field .hint{font-size:11.5px;color:var(--faint);margin-top:5px}
+  input[type=text],input[type=email],select,textarea{
+    width:100%;font:inherit;font-size:14px;color:var(--ink);
+    background:var(--card);border:1px solid var(--line-2);border-radius:var(--r);
+    padding:11px 13px;min-height:44px;
+  }
+  select{appearance:none;background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='none' stroke='%236E6E68' stroke-width='1.2' d='M1 1.5 6 6.5 11 1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px}
+  textarea{min-height:150px;line-height:1.75;resize:vertical}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(44,86,71,.08)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 22px}
+  .radio-row{display:flex;gap:22px;padding-top:2px}
+  .radio-row label{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;color:var(--ink);margin:0}
+  .check{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--ink-2);line-height:1.55}
+  .field .check{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--ink-2);line-height:1.55;margin:0}
+  .field .check input{margin:3px 0 0}
+  .consent{
+    background:var(--card);border:1px solid var(--line);padding:14px 16px;border-radius:var(--r);
+  }
+  .consent .terms{font-size:11.5px;color:var(--faint);line-height:1.65;margin:0 0 10px}
+
+  /* ---------- timeline / status ---------- */
+  .status{border:1px solid var(--line-2);background:var(--card);padding:20px 22px;border-radius:var(--r)}
+  .status .idline{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .status .id{color:var(--ink);letter-spacing:.02em}
+  .tl{list-style:none;margin:16px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+  .tl li{position:relative;padding-top:16px;font-size:11.5px;color:var(--faint);border-top:1px solid var(--line)}
+  .tl li::before{content:"";position:absolute;top:-3.5px;left:0;width:6px;height:6px;border-radius:50%;background:var(--line-2)}
+  .tl li.on{color:var(--ink);border-top-color:var(--accent)}
+  .tl li.on::before{background:var(--accent)}
+  .tl li span{display:block;margin-top:2px;font-variant-numeric:tabular-nums}
+
+  /* ---------- empty ---------- */
+  .empty{
+    border:1px dashed var(--line-2);border-radius:var(--r);
+    padding:30px 26px;color:var(--muted);font-size:13.5px;line-height:1.7;background:rgba(255,255,255,.5);
+  }
+  .empty strong{display:block;color:var(--ink);font-weight:600;font-size:14px;margin-bottom:6px}
+
+  /* ---------- mail ---------- */
+  .mailwrap{display:grid;grid-template-columns:290px minmax(0,1fr);gap:0;border:1px solid var(--line-2);background:var(--card)}
+  .inbox{border-right:1px solid var(--line);padding:16px 0 18px}
+  .inbox .cap{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);padding:0 18px 10px}
+  .mailitem{display:block;padding:11px 18px;border-left:2px solid transparent;cursor:pointer}
+  .mailitem.on{background:var(--accent-soft);border-left-color:var(--accent)}
+  .mailitem .from{font-size:12px;color:var(--ink)}
+  .mailitem .subj{font-size:12px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mailitem .time{font-size:10.5px;color:var(--faint);margin-top:3px;font-variant-numeric:tabular-nums}
+  .mailitem.unread .from{font-weight:600}
+  .mailpane{padding:22px 24px 24px}
+  .mailpane .mh{font-size:11px;color:var(--faint);letter-spacing:.04em;margin-bottom:14px}
+  .mailpane .mh b{color:var(--ink);font-weight:600;font-size:13px;letter-spacing:-0.01em;display:block;margin-top:2px;line-height:1.45}
+  .mailbody{font-size:13px;line-height:1.85;color:var(--ink-2);white-space:pre-line;margin:0 0 18px;overflow-wrap:anywhere}
+  .dl{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    border:1px solid var(--line);padding:14px 16px;border-radius:var(--r);background:var(--paper);
+  }
+  .dl .name{font-size:13px;line-height:1.45}
+  .dl .name small{display:block;color:var(--faint);font-size:11px;margin-top:3px;letter-spacing:.01em}
+  .note{font-size:11.5px;color:var(--faint);line-height:1.7;margin:14px 0 0}
+
+  /* ---------- admin ---------- */
+  .alarm{
+    display:flex;align-items:flex-start;gap:11px;margin-bottom:26px;
+    border:1px solid #E4D3CB;background:#FBF4F0;padding:14px 16px;border-radius:var(--r);
+  }
+  .alarm .pulse{width:7px;height:7px;border-radius:50%;background:var(--signal);margin-top:7px;flex:0 0 auto;box-shadow:0 0 0 4px rgba(162,72,43,.12)}
+  .alarm p{margin:0;font-size:12.5px;line-height:1.6;color:#6A3A28}
+  .alarm b{color:#4E2A1C;font-weight:600}
+  .qhead{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:14px}
+  .qhead .n{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .qrow{border-bottom:1px solid var(--line);padding:16px 2px}
+  .qrow .top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:start;cursor:pointer}
+  .qrow .who{font-size:14px}
+  .qrow .who span{color:var(--muted);font-size:12px;margin-left:7px}
+  .qrow .sub{font-size:12px;color:var(--faint);margin-top:3px;font-variant-numeric:tabular-nums}
+  .qrow .state{display:flex;align-items:center;gap:12px;justify-self:end}
+  .qrow .chev{font-size:11px;color:var(--faint);transition:transform .15s}
+  .qrow.open .chev{transform:rotate(180deg)}
+  .qrow .detail{overflow:hidden;max-height:0;transition:max-height .25s ease}
+  .qrow.open .detail{max-height:1400px}
+  .qrow .detail-in{padding:18px 0 4px}
+  .kv{display:grid;grid-template-columns:96px minmax(0,1fr);gap:6px 16px;font-size:12.5px;margin-bottom:18px}
+  .kv dt{color:var(--faint)}
+  .kv dd{margin:0;color:var(--ink-2)}
+  .mailprev{border:1px solid var(--line);background:var(--paper);border-radius:var(--r);padding:16px 18px}
+  .mailprev .lbl{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:10px}
+  .mailprev .s{font-size:12.5px;line-height:1.5;margin-bottom:12px;color:var(--ink)}
+  .mailprev .b{font-size:12px;line-height:1.8;color:var(--muted);white-space:pre-line;overflow-wrap:anywhere}
+  .sentbox{margin-top:34px}
+  .sentrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:13px 2px;border-bottom:1px solid var(--line);font-size:13px}
+  .sentrow .meta{font-size:11.5px;color:var(--faint);margin-top:2px;font-variant-numeric:tabular-nums}
+  .okmark{color:var(--accent);font-size:11.5px;letter-spacing:.02em;white-space:nowrap;padding-top:2px}
+
+  /* ---------- toast / footer ---------- */
+  .toast{
+    position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);
+    background:var(--ink);color:#fff;font-size:12.5px;padding:11px 18px;border-radius:999px;
+    opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:80;max-width:88vw;text-align:center;
+  }
+  .toast.on{opacity:1;transform:translate(-50%,0)}
+  footer{
+    border-top:1px solid var(--line);margin-top:0;
+  }
+  .foot-in{
+    max-width:1160px;margin:0 auto;padding:20px 40px 40px;
+    display:flex;gap:20px;align-items:baseline;justify-content:space-between;flex-wrap:wrap;
+  }
+  .foot-in p{margin:0;font-size:11.5px;color:var(--faint);line-height:1.7;max-width:70ch}
+  .foot-in button{font-size:11.5px;color:var(--muted);border-bottom:1px solid var(--line-2);padding-bottom:1px}
+  .guide{max-width:1160px;margin:0 auto;padding:0 40px 8px}
+  .guide summary{font-size:11.5px;color:var(--muted);cursor:pointer;list-style:none;display:inline-block;border-bottom:1px solid var(--line-2);padding-bottom:1px}
+  .guide summary::-webkit-details-marker{display:none}
+  .guide ol{margin:12px 0 0;padding-left:18px;font-size:12px;color:var(--muted);line-height:1.75}
+  .guide li{margin-bottom:3px}
+
+  .hidden{display:none!important}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:980px){
+    .topbar{position:static;height:auto;padding:13px 20px;flex-wrap:wrap;gap:10px 14px}
+    .topmeta{display:none}
+    .switch{margin-left:auto}
+    .shell{grid-template-columns:1fr;gap:26px;padding:24px 20px 64px}
+    .rail{position:sticky;top:0;z-index:20;background:var(--paper);padding:2px 0 10px;margin:0 -20px;padding-left:20px;padding-right:20px}
+    .rail-label{display:none}
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);border-top:0;gap:0}
+    .steps li{border-bottom:1px solid var(--line)}
+    .steps button{grid-template-columns:1fr;gap:2px;padding:9px 0 9px 0;text-align:left}
+    .steps .num{font-size:10px;padding-top:0}
+    .steps .t{font-size:11.5px;letter-spacing:-0.01em}
+    .steps .d{display:none}
+    .steps li.on button{padding-left:8px}
+    .steps li.on button::before{top:8px;bottom:8px}
+    .rail-note{display:none}
+    .today{grid-template-columns:1fr}
+    .today .date{flex-direction:row;align-items:baseline;gap:8px;border-right:0;border-bottom:1px solid var(--line);padding:14px 20px}
+    .today .date .d1{font-size:19px}
+    .today .body{padding:18px 20px 20px}
+    .today h2{font-size:17px}
+    .row{
+      display:grid;grid-template-columns:1fr auto;
+      grid-template-areas:"when tag" "what what" "acts acts";
+      gap:5px 10px;padding:14px 0;align-items:start;
+    }
+    .row .when{grid-area:when;display:flex;gap:7px;align-items:baseline;font-size:11px}
+    .row .when b{display:inline;font-size:11.5px;color:var(--muted);font-weight:400}
+    .row .what{grid-area:what;margin-top:1px}
+    .row .tagcol{grid-area:tag;justify-self:end;padding-top:1px}
+    .row .acts{grid-area:acts;display:flex;flex-wrap:wrap;justify-content:flex-start;justify-self:stretch;gap:6px 16px;margin-top:9px}
+    .row .acts a{font-size:12px}
+    .row .acts .btn-quiet{font-size:12px}
+    .grid2{grid-template-columns:1fr}
+    .mailwrap{grid-template-columns:minmax(0,1fr)}
+    .inbox,.mailpane{min-width:0}
+    .dl{flex-direction:column;align-items:stretch;gap:12px}
+    .dl .btn{width:100%}
+    .btn-row .btn[data-goto]{flex:0 0 auto;min-width:88px}
+    .inbox{border-right:0;border-bottom:1px solid var(--line);padding-bottom:10px}
+    .mailpane{padding:18px 18px 20px}
+    .qrow .top{grid-template-columns:1fr}
+    .qrow .state{justify-self:start}
+    .kv{grid-template-columns:82px minmax(0,1fr)}
+    .foot-in{padding:18px 20px 40px}
+    .guide{padding:0 20px 6px}
+    .btn{min-height:44px}
+  }
+  @media (max-width:520px){
+    h1{font-size:21px}
+    .lead{font-size:14px;margin-bottom:26px}
+    .steps .t{font-size:11px}
+    .today .body{padding:16px 16px 18px}
+    .btn-row .spacer{display:none}
+    .btn-row{gap:8px}
+    .btn-row .btn{flex:1 1 calc(50% - 4px);min-width:0;padding:0 10px}
+    .btn-row .btn-quiet{flex:0 0 auto}
+    .today .btn-row .btn-quiet{flex:0 0 auto;min-height:30px;justify-content:flex-start;padding-left:2px;margin-top:2px}
+    .tl{grid-template-columns:1fr;gap:12px}
+    .tl li{padding-top:0;padding-left:14px;border-top:0;border-left:1px solid var(--line)}
+    .tl li::before{top:6px;left:-3.5px}
+    .switch button{padding:6px 12px;font-size:12.5px}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="mark">나의 디지털 사무실</span>
+    <span class="slash">/</span>
+    <span class="sub">원스탑</span>
+  </div>
+  <div class="topmeta">수요라이브 12차 · 2026.11.18 수</div>
+  <div class="switch" role="tablist" aria-label="화면 전환">
+    <button role="tab" id="tab-member" aria-selected="true" data-view="member">참여자</button>
+    <button role="tab" id="tab-admin" aria-selected="false" data-view="admin">관리자 승인 <span class="badge" id="adminBadge">0</span></button>
+  </div>
+</header>
+
+<!-- ================= MEMBER ================= -->
+<main class="shell" id="view-member">
+  <aside class="rail">
+    <p class="rail-label">참여자 흐름</p>
+    <ol class="steps" id="stepList">
+      <li class="on" data-step="1"><button type="button"><span class="num">01</span><span><span class="t">강의 신청</span><span class="d">큐리어스에서 바로</span></span></button></li>
+      <li data-step="2"><button type="button"><span class="num">02</span><span><span class="t">후기 남기기</span><span class="d">초안은 피클이</span></span></button></li>
+      <li data-step="3"><button type="button"><span class="num">03</span><span><span class="t">전자책 신청</span><span class="d">앱 안에서 한 번에</span></span></button></li>
+      <li data-step="4"><button type="button"><span class="num">04</span><span><span class="t">메일·다운로드</span><span class="d">승인되면 지메일로</span></span></button></li>
+    </ol>
+    <div class="rail-note">
+      <p><span class="k">피클이 대신합니다</span>참여자가 직접 하지 않아도 됩니다. 각자의 피클이 이 화면에 들어와 1~4단계를 진행하고, 참여자는 확인과 동의만 합니다.</p>
+    </div>
+  </aside>
+
+  <section class="panel" id="panel">
+
+    <!-- STEP 1 -->
+    <div class="step-panel" id="p1">
+      <p class="eyebrow"><span class="dot"></span>Step 01 — 신청</p>
+      <h1>오늘의 강의</h1>
+      <p class="lead">신청은 큐리어스 상세 페이지에서 이루어집니다. 버튼을 누르면 해당 회차 페이지가 열립니다.</p>
+
+      <div class="today">
+        <div class="date">
+          <span class="d1">11.18</span>
+          <span class="d2">수 · 20:00</span>
+        </div>
+        <div class="body">
+          <h2>나의 디지털 사무실, 오늘부터 운영합니다</h2>
+          <p class="meta"><span class="nw">멤버십 수요라이브 12차</span> · <span class="nw">20:00–21:00 (한국)</span> / <span class="nw">19:00–20:00 (중국)</span></p>
+          <p class="meta tools">Google Workspace 통합 · Gemini · Gemini Notebook</p>
+          <div class="btn-row">
+            <a class="btn btn-primary" href="https://curious-500.com/v2/study/5064?leader_code=9499" target="_blank" rel="noopener">멤버십 무료 신청</a>
+            <a class="btn btn-ghost" href="https://curious-500.com/v2/study/5063?leader_code=9499" target="_blank" rel="noopener">일반 50,000원</a>
+            <a class="btn btn-quiet" href="https://us06web.zoom.us/j/85918964129?pwd=enJURKmS80ZMuPrIEGtLC8a9ukuwTf.1" target="_blank" rel="noopener">줌 입장</a>
+          </div>
+          <p class="price-note">멤버십 회원은 0원, 일반 참여자는 50,000원입니다.</p>
+        </div>
+      </div>
+
+      <h2 class="sec">다음 강의</h2>
+      <div class="list" id="listUpcoming"></div>
+
+      <h2 class="sec">지난 강의 · 후기와 전자책</h2>
+      <div class="list" id="listPast"></div>
+      <p class="note">전자책이 등록된 회차는 후기 작성 후 바로 내려받을 수 있습니다. 오늘 회차의 전자책은 라이브 후 2~3일 안에 발행됩니다.</p>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step-panel hidden" id="p2">
+      <p class="eyebrow"><span class="dot"></span>Step 02 — 후기</p>
+      <h1>후기를 남깁니다</h1>
+      <p class="lead">큐리어스 상세 페이지의 후기 탭에서 남깁니다. 빈 화면 앞에서 멈추지 않도록, 피클이 초안을 먼저 써 둡니다.</p>
+
+      <div class="field">
+        <label for="reviewLecture">어느 강의의 후기인가요</label>
+        <select id="reviewLecture"></select>
+        <p class="hint" id="reviewLectureHint"></p>
+      </div>
+
+      <h2 class="sec">1 — 큐리어스 후기 탭</h2>
+      <div class="btn-row">
+        <a class="btn btn-ghost" id="reviewLink" href="#" target="_blank" rel="noopener">큐리어스에서 후기 쓰기</a>
+        <span class="hint" style="font-size:11.5px;color:var(--faint)">별점과 후기를 남기면 포인트도 함께 적립됩니다.</span>
+      </div>
+
+      <h2 class="sec">2 — 후기 초안</h2>
+      <div class="btn-row" style="margin-bottom:14px">
+        <button class="btn btn-ghost" id="draftBtn" type="button">피클에게 초안 부탁</button>
+        <button class="btn btn-quiet" id="copyBtn" type="button">복사</button>
+        <div class="spacer"></div>
+        <span class="hint" id="charCount" style="font-size:11.5px;color:var(--faint)">0자</span>
+      </div>
+      <textarea id="draft" placeholder="초안 버튼을 누르면 강의에 맞춘 문장이 채워집니다. 그대로 써도 되고, 참여자 말투로 고쳐도 됩니다."></textarea>
+      <p class="hint">말투 기준 — 이름 호칭은 빼고, ‘-습니다’와 ‘-해요’를 섞어서, 느낌표 없이 담백하게.</p>
+
+      <h2 class="sec">3 — 등록 확인</h2>
+      <label class="check" style="margin-bottom:22px">
+        <input type="checkbox" id="reviewDone">
+        <span>큐리어스에 후기를 등록했습니다</span>
+      </label>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="toStep3" type="button" disabled>전자책 신청으로</button>
+        <div class="spacer"></div>
+        <button class="btn btn-ghost" type="button" data-goto="1">이전</button>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step-panel hidden" id="p3">
+      <p class="eyebrow"><span class="dot"></span>Step 03 — 전자책 신청</p>
+      <h1>전자책을 신청합니다</h1>
+      <p class="lead">구글폼과 같은 항목입니다. 제출하면 류지연 님의 승인 대기로 넘어가고, 승인되면 지메일로 전자책이 발송됩니다.</p>
+
+      <div id="applyStatus"></div>
+
+      <form id="applyForm">
+        <div class="field">
+          <label>참여하신 강의</label>
+          <div id="applyLecture" style="font-size:14px;padding:11px 0;border-bottom:1px solid var(--line);color:var(--ink)"></div>
+        </div>
+
+        <div class="grid2">
+          <div class="field">
+            <label for="fName">이름</label>
+            <input type="text" id="fName" value="김서연" autocomplete="name">
+          </div>
+          <div class="field">
+            <label for="fNick">큐리어스 닉네임</label>
+            <input type="text" id="fNick" value="서연의 작업실" autocomplete="off">
+            <p class="hint">작성하신 후기를 확인할 때 사용합니다.</p>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="fMail">전자책 선물을 받을 Gmail 주소</label>
+          <input type="email" id="fMail" value="seoyeon.demo@gmail.com" autocomplete="email">
+          <p class="hint">회원 등록 시 사용한 @gmail.com 주소만 제출할 수 있습니다.</p>
+        </div>
+
+        <div class="field">
+          <label for="fType">이번 강의에 어떤 방식으로 참여하셨나요</label>
+          <select id="fType">
+            <option>큐리어스멤버십</option>
+            <option>큐리어스어울림</option>
+            <option>이룸디지털전환교육원</option>
+            <option>기타</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>큐리어스에 후기를 등록하셨나요</label>
+          <div class="radio-row">
+            <label><input type="radio" name="reviewed" value="yes" checked> 네, 등록했습니다</label>
+            <label><input type="radio" name="reviewed" value="no"> 아직 등록하지 않았습니다</label>
+          </div>
+        </div>
+
+        <div class="field consent">
+          <p class="terms">수집 항목: 이름, 큐리어스 닉네임, 이메일 주소 · 이용 목적: 후기 확인 및 전자책 선물 발송 · 보유 기간: 선물 발송 완료 후 3개월. 동의를 거부할 수 있으나, 거부 시 전자책 선물 신청이 어렵습니다.</p>
+          <label class="check"><input type="checkbox" id="fConsent" checked><span>개인정보 수집·이용에 동의합니다</span></label>
+        </div>
+
+        <div class="btn-row" style="margin-top:24px">
+          <button class="btn btn-primary" type="submit" id="submitApply">신청 보내기</button>
+          <a class="btn btn-ghost" href="https://joo.is/라이브후기" target="_blank" rel="noopener">구글폼에서 직접 제출</a>
+          <div class="spacer"></div>
+          <button class="btn btn-ghost" type="button" data-goto="2">이전</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step-panel hidden" id="p4">
+      <p class="eyebrow"><span class="dot"></span>Step 04 — 메일과 다운로드</p>
+      <h1>지메일에서 확인하고 내려받습니다</h1>
+      <p class="lead">류지연 님이 승인하면 참여자의 지메일로 전자책 링크가 도착합니다. 참여자의 피클이 메일을 확인하고 다운로드까지 마칩니다.</p>
+      <div id="mailArea"></div>
+    </div>
+
+  </section>
+</main>
+
+<!-- ================= ADMIN ================= -->
+<main class="shell hidden" id="view-admin">
+  <aside class="rail">
+    <p class="rail-label">관리자</p>
+    <ol class="steps" id="adminSteps">
+      <li class="on"><button type="button"><span class="num">01</span><span><span class="t">승인 대기함</span><span class="d">피클이 알람을 띄웁니다</span></span></button></li>
+      <li><button type="button"><span class="num">02</span><span><span class="t">승인 및 발송</span><span class="d">버튼 하나</span></span></button></li>
+      <li><button type="button"><span class="num">03</span><span><span class="t">발송 기록</span><span class="d">09_후기선물에 남습니다</span></span></button></li>
+    </ol>
+    <div class="rail-note">
+      <p><span class="k">류지연 님은 승인만</span>후기 확인과 대조는 피클이 끝내 둡니다. 지연 님은 신청 내용을 보고 [승인 및 발송]만 누릅니다.</p>
+    </div>
+  </aside>
+
+  <section class="panel">
+    <div id="adminAlarm"></div>
+    <p class="eyebrow"><span class="dot"></span>관리자 — 승인</p>
+    <h1>승인 대기함</h1>
+    <p class="lead">새 전자책 신청이 들어오면 피클이 여기에 알람을 띄웁니다. 승인하면 지메일 발송과 기록까지 한 번에 끝납니다.</p>
+
+    <div class="qhead">
+      <span class="n" id="queueCount">대기 0건</span>
+      <span class="n" id="queueHint">자동발송 꺼짐 · 사람이 승인한 건만 발송</span>
+    </div>
+    <div id="queue"></div>
+
+    <div class="sentbox" id="sentBox"></div>
+  </section>
+</main>
+
+<footer>
+  <details class="guide">
+    <summary>시연 순서 보기</summary>
+    <ol>
+      <li>참여자 탭 — 오늘 수요라이브 12차 카드에서 ‘멤버십 무료 신청’을 보여 줍니다.</li>
+      <li>02 후기 — 강의를 고르고 ‘피클에게 초안 부탁’ → 문장 확인 → ‘큐리어스에 후기를 등록했습니다’ 체크.</li>
+      <li>03 전자책 신청 — 항목을 훑고 ‘신청 보내기’. 승인 대기 상태가 됩니다.</li>
+      <li>상단 [관리자 승인] — 피클 알람 확인 → 신청을 펼쳐 발송될 메일 확인 → [승인 및 발송].</li>
+      <li>참여자 탭 04 — 지메일 도착, [전자책 열기]로 실제 큐리어스 상품 페이지가 열립니다.</li>
+      <li>시연이 끝나면 아래 [시연 초기화]로 처음 상태로 되돌립니다.</li>
+    </ol>
+  </details>
+  <div class="foot-in">
+    <p>시연용 프로토타입입니다. 앱 안의 신청과 발송은 실제로 전송되지 않으며, 큐리어스·구글폼 링크는 실제 페이지로 연결됩니다. 강의·가격·링크·문구는 강의 Master 파일과 후기 감사 선물 신청 폼에서 가져왔습니다.</p>
+    <button type="button" id="resetBtn">시연 초기화</button>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* =========================================================
+   실제 데이터 — 강의 Master(02_강의Master) · 후기선물(09·11) · 신청 폼
+   ========================================================= */
+const CQ = 'https://curious-500.com/v2';
+const LECTURES = {
+  '20261118_수요12': {
+    id:'20261118_수요12', date:'2026-11-18', md:'11.18', dow:'수', program:'멤버십 수요라이브', round:'12차',
+    title:'나의 디지털 사무실, 오늘부터 운영합니다',
+    time:'20:00–21:00 (한국) / 19:00–20:00 (중국)',
+    tools:'Google Workspace 통합 · Gemini · Gemini Notebook',
+    paid:CQ+'/study/5063?leader_code=9499', free:CQ+'/study/5064?leader_code=9499',
+    price:'50,000원', bucket:'today', ebook:null
+  },
+  '20261125_이룸CAL04': {
+    id:'20261125_이룸CAL04', date:'2026-11-25', md:'11.25', dow:'수', program:'이룸 디지털전환교육원', round:'CAL 04',
+    title:'Google Calendar 실행 시스템 만들기 [CAL04] 협업 일정편',
+    tools:'Google Calendar · Gemini',
+    paid:CQ+'/study/5068?leader_code=9499', free:CQ+'/study/5069?leader_code=9499',
+    price:'50,000원', bucket:'upcoming', ebook:null
+  },
+  '20261121_북클럽22기_02': {
+    id:'20261121_북클럽22기_02', date:'2026-11-21', md:'11.21', dow:'토', program:'AI 실전 북클럽', round:'22기 2회차',
+    title:'[북클럽 22기 2회차] 내 개인 AI 업무 시스템 v1.0 완성',
+    tools:'Gemini · Google Workspace',
+    paid:CQ+'/study/4846?leader_code=9499', free:null,
+    price:'북클럽 참여자', bucket:'upcoming', ebook:null
+  },
+  '20261117_이룸DOC09': {
+    id:'20261117_이룸DOC09', date:'2026-11-17', md:'11.17', dow:'화', program:'이룸 디지털전환교육원', round:'DOC 09',
+    title:'Google Docs AI 기록 시스템 [DOC09] 협업 기록편',
+    paid:CQ+'/study/5065?leader_code=9499', free:CQ+'/study/5067?leader_code=9499',
+    bucket:'past', ebook:null
+  },
+  '20261107_3대장': {
+    id:'20261107_3대장', date:'2026-11-07', md:'11.07', dow:'토', program:'Google과 AI 3대장', round:'',
+    title:'Gemini로 만드는 나만의 AI 업무 비서',
+    paid:CQ+'/study/4665?leader_code=9499', free:CQ+'/study/4666?leader_code=9499',
+    bucket:'past',
+    ebook:{ id:'E20261107_3DJANG', name:'나만의 AI 업무 비서 만들기', version:'v1.1',
+      free:CQ+'/digital-content/700', paid:CQ+'/digital-content/699' }
+  },
+  '20261104_수요11': {
+    id:'20261104_수요11', date:'2026-11-04', md:'11.04', dow:'수', program:'멤버십 수요라이브', round:'11차',
+    title:'AI가 내 방식대로 일하게 만들기',
+    paid:CQ+'/study/5061?leader_code=9499', free:CQ+'/study/5062?leader_code=9499',
+    bucket:'past',
+    ebook:{ id:'E20261104_SUYO11', name:'AI가 내 방식대로 일하게 만들기', version:'v1.1',
+      free:CQ+'/digital-content/696', paid:CQ+'/digital-content/695' }
+  },
+  '20261103_화요': {
+    id:'20261103_화요', date:'2026-11-03', md:'11.03', dow:'화', program:'책과강연 화요라이브', round:'',
+    title:'작가의 AI 홍보 비서 만들기',
+    paid:CQ+'/study/5055?leader_code=9499', free:CQ+'/study/5056?leader_code=9499',
+    bucket:'past',
+    ebook:{ id:'E20261103_TUE11', name:'작가의 AI 홍보 비서 만들기', version:'v1.0',
+      free:CQ+'/digital-content/692', paid:CQ+'/digital-content/691' }
+  },
+  '20261021_수요10': {
+    id:'20261021_수요10', date:'2026-10-21', md:'10.21', dow:'수', program:'멤버십 수요라이브', round:'10차',
+    title:'있는 자료로 한 편 완성하기',
+    paid:CQ+'/study/5007?leader_code=9499', free:CQ+'/study/5008?leader_code=9499',
+    bucket:'past',
+    ebook:{ id:'E20261021_SUYO10', name:'있는 자료로 한 편 완성하기', version:'v1.0',
+      free:CQ+'/digital-content/677', paid:CQ+'/digital-content/676' }
+  }
+};
+
+/* 후기 초안 — 참여자 말투(호칭 없이, -습니다/-해요, 느낌표 없이) */
+const DRAFTS = {
+  '20261117_이룸DOC09': `〈Google Docs AI 기록 시스템 [DOC09] 협업 기록편〉 잘 들었습니다.
+
+회의 기록을 남겨도 다시 찾지 못해 늘 아쉬웠는데, 문서 안에서 결정과 다음 할 일을 따로 떼어 두는 방식이 마음에 남았습니다. 강의 후에 지난 회의록 한 편을 같은 구조로 다시 정리해 보았고, 필요한 부분을 찾는 시간이 확실히 줄었어요.
+
+다음에는 팀원과 함께 쓰는 문서에도 같은 틀을 적용해 보려고 합니다. 감사합니다.`,
+  '20261107_3대장': `〈Gemini로 만드는 나만의 AI 업무 비서〉 잘 들었습니다.
+
+비서를 새로 사는 일이 아니라, 제가 자주 하는 일을 AI에게 넘기는 순서를 정하는 일이라는 점이 인상적이었어요. 강의에서 만든 문서에 제 업무를 하나씩 옮겨 적어 보니, 맡길 일과 제가 판단할 일이 나뉘어서 마음이 한결 가벼웠습니다.
+
+당장은 블로그 글 초안과 강의 안내문을 비서에게 먼저 맡겨 보려고 합니다. 혼자서도 다시 따라갈 수 있게 정리해 주셔서 감사합니다.`,
+  '20261104_수요11': `수요라이브 11차 〈AI가 내 방식대로 일하게 만들기〉 잘 들었습니다.
+
+같은 지시를 매번 새로 타이핑하고 있었는데, 그 반복을 매뉴얼 한 장으로 남겨 두는 방식이 오래 남았어요. 강의에서 만든 문서를 제 업무에 그대로 옮겨 적어 보니, AI가 답을 잘하는지보다 제가 무엇을 원하는지 먼저 정리해 두는 일이 더 중요하다는 걸 알았습니다.
+
+이번 주에는 출간 문의 답변을 매뉴얼로 정리해 두고, 다음에 같은 질문이 와도 처음부터 설명하지 않으려고 합니다. 좋은 시간 마련해 주셔서 감사합니다.`,
+  '20261103_화요': `〈작가의 AI 홍보 비서 만들기〉 잘 들었습니다.
+
+책을 알리는 일이 매번 새 글을 쓰는 일이라고만 생각했는데, 이미 쓴 글을 다시 꺼내 쓰는 구조를 만드는 쪽이 훨씬 오래 간다는 걸 배웠어요. 강의에서 본 영상 프롬프트를 제 책 소개에 맞게 고쳐 보니, 제가 쓰던 문장이 그대로 남아 있어서 놀랐습니다.
+
+다음 달 신간 소개 영상은 이 방식으로 먼저 만들어 볼 생각입니다. 감사합니다.`,
+  '20261021_수요10': `수요라이브 10차 〈있는 자료로 한 편 완성하기〉 잘 들었습니다.
+
+새로 만들려고만 하다 보니 늘 시작이 어려웠는데, 이미 가진 자료에서 한 편을 뽑아내는 순서를 보여 주셔서 부담이 줄었어요. 강의 다음 날 지난 사진과 메모를 모아 짧은 발표 자료를 하나 완성해 보았습니다.
+
+완벽하지 않아도 끝을 본다는 게 이렇게 시원한 일인지 몰랐습니다. 감사합니다.`
+};
+
+const ADMIN_MAIL = 'awesome@dtedu.co.kr';
+const STORE_KEY = 'onestop-demo-v2';
+
+/* =========================================================
+   상태
+   ========================================================= */
+let state = {
+  view:'member',
+  step:1,
+  lecture:'20261104_수요11',
+  reviewed:false,
+  draft:'',
+  app:null,
+  sent:null,
+  sentLog:[]
+};
+try{ const raw = localStorage.getItem(STORE_KEY); if(raw) state = Object.assign(state, JSON.parse(raw)); }catch(e){}
+
+function save(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){} }
+
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
+
+function toast(msg){
+  const t=$('#toast'); t.textContent=msg; t.classList.add('on');
+  clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('on'),2200);
+}
+function fmtTime(d){
+  const h=String(d.getHours()).padStart(2,'0'), m=String(d.getMinutes()).padStart(2,'0');
+  return h+':'+m;
+}
+function lectureOpts(){
+  return Object.values(LECTURES).filter(l=>l.bucket==='past');
+}
+
+/* =========================================================
+   상단 / 뷰 전환
+   ========================================================= */
+function setView(v){
+  state.view=v; save();
+  $('#view-member').classList.toggle('hidden', v!=='member');
+  $('#view-admin').classList.toggle('hidden', v!=='admin');
+  $$('.switch button').forEach(b=>b.setAttribute('aria-selected', String(b.dataset.view===v)));
+  window.scrollTo({top:0,behavior:'instant'});
+  if(v==='admin') renderAdmin();
+}
+$$('.switch button').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));
+
+function setStep(n){
+  state.step=n; save();
+  $$('#stepList li').forEach(li=>{
+    const i=Number(li.dataset.step);
+    li.classList.toggle('on', i===n);
+    li.classList.toggle('done', i<n);
+  });
+  [1,2,3,4].forEach(i=>$('#p'+i).classList.toggle('hidden', i!==n));
+  if(n===4) renderMail();
+  if(n===3) renderApply();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+$$('#stepList li').forEach(li=>li.querySelector('button').addEventListener('click',()=>setStep(Number(li.dataset.step))));
+$$('[data-goto]').forEach(b=>b.addEventListener('click',()=>setStep(Number(b.dataset.goto))));
+
+/* =========================================================
+   STEP 1 — 강의 목록
+   ========================================================= */
+function rowHTML(l, past){
+  const acts=[];
+  if(l.free) acts.push(`<a href="${l.free}" target="_blank" rel="noopener">무료 신청</a>`);
+  if(l.paid) acts.push(`<a class="mute" href="${l.paid}" target="_blank" rel="noopener">유료 신청</a>`);
+  if(past){
+    acts.push(`<button type="button" class="btn-quiet" data-review="${l.id}">후기 남기기</button>`);
+  }
+  const tag = past
+    ? (l.ebook ? `<span class="tag ready">전자책 ${l.ebook.version}</span>` : `<span class="tag">전자책 준비 중</span>`)
+    : '';
+  return `<div class="row">
+    <div class="when"><b>${l.md}</b>${l.dow} · ${l.round||l.program}</div>
+    <div class="what"><div class="prog">${l.program}</div><div class="title">${l.title}</div></div>
+    <div class="tagcol">${tag}</div>
+    <div class="acts">${acts.join('')}</div>
+  </div>`;
+}
+function autosize(){
+  const t=$('#draft'); if(!t) return;
+  t.style.height='auto';
+  t.style.height=Math.max(150, t.scrollHeight+2)+'px';
+}
+
+function renderLists(){
+  const up=Object.values(LECTURES).filter(l=>l.bucket==='upcoming').sort((a,b)=>a.date.localeCompare(b.date));
+  const past=lectureOpts().sort((a,b)=>b.date.localeCompare(a.date));
+  // 다음 강의: 가장 가까운 순
+  $('#listUpcoming').innerHTML = up.map(l=>rowHTML(l,false)).join('');
+  $('#listPast').innerHTML = past.map(l=>rowHTML(l,true)).join('');
+  $$('[data-review]').forEach(b=>b.addEventListener('click',()=>{
+    state.lecture=b.dataset.review; save();
+    $('#reviewLecture').value=state.lecture;
+    syncLecture();
+    setStep(2);
+  }));
+}
+
+/* =========================================================
+   STEP 2 — 후기
+   ========================================================= */
+function syncLecture(){
+  const l=LECTURES[state.lecture];
+  const link = l.free || l.paid;
+  $('#reviewLink').href = link;
+  $('#reviewLectureHint').textContent = l.ebook
+    ? `${l.date} · 전자책 ${l.ebook.id} 등록 완료 — 이 후기로 전자책까지 이어집니다.`
+    : `${l.date} · 이 회차 전자책은 아직 등록 전입니다.`;
+  $('#applyLecture').textContent = `${l.md} ${l.program} ${l.round} — ${l.title}`;
+  const saved = state.draft || '';
+  $('#draft').value = saved;
+  $('#charCount').textContent = saved.length.toLocaleString('ko-KR')+'자';
+  $('#reviewDone').checked = !!state.reviewed;
+  $('#toStep3').disabled = !state.reviewed;
+  autosize();
+}
+function initReview(){
+  const sel=$('#reviewLecture');
+  sel.innerHTML = lectureOpts().sort((a,b)=>b.date.localeCompare(a.date))
+    .map(l=>`<option value="${l.id}">${l.md} ${l.program} ${l.round} · ${l.title}</option>`).join('');
+  sel.value = state.lecture;
+  sel.addEventListener('change',()=>{
+    state.lecture=sel.value; state.draft=''; state.reviewed=false; save();
+    syncLecture();
+  });
+  $('#draftBtn').addEventListener('click',()=>{
+    state.draft = DRAFTS[state.lecture] || DRAFTS['20261104_수요11'];
+    save(); syncLecture();
+    toast('초안을 채웠습니다. 참여자 말투로 다듬어도 됩니다.');
+  });
+  $('#draft').addEventListener('input',e=>{
+    state.draft=e.target.value;
+    $('#charCount').textContent = state.draft.length.toLocaleString('ko-KR')+'자';
+    autosize();
+    save();
+  });
+  $('#copyBtn').addEventListener('click',async()=>{
+    const txt=$('#draft').value;
+    if(!txt){ toast('먼저 초안을 만들어 주세요.'); return; }
+    try{ await navigator.clipboard.writeText(txt); toast('복사했습니다.'); }
+    catch(e){ $('#draft').select(); document.execCommand && document.execCommand('copy'); toast('복사했습니다.'); }
+  });
+  $('#reviewDone').addEventListener('change',e=>{
+    state.reviewed=e.target.checked; save();
+    $('#toStep3').disabled = !state.reviewed;
+    if(state.reviewed) toast('후기 확인 완료 — 전자책 신청으로 넘어갈 수 있습니다.');
+  });
+  $('#toStep3').addEventListener('click',()=>setStep(3));
+  syncLecture();
+}
+
+/* =========================================================
+   STEP 3 — 전자책 신청
+   ========================================================= */
+function appId(){
+  const d=new Date();
+  const p=n=>String(n).padStart(2,'0');
+  const seq=100+Math.floor(Math.random()*90);
+  return `R${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}-${seq}`;
+}
+function renderApply(){
+  const box=$('#applyStatus');
+  const sent = state.sent;
+  if(state.app){
+    box.innerHTML = `<div class="status">
+      <div class="idline"><span>신청 ID</span><span class="id">${state.app.id}</span><span>·</span><span>${state.app.type}</span></div>
+      <p style="margin:10px 0 0;font-size:13px;color:var(--muted)">${sent && sent.appId===state.app.id
+        ? '승인되어 지메일로 발송되었습니다. 4단계에서 메일과 전자책을 확인할 수 있습니다.'
+        : '접수되었습니다. 류지연 님의 승인을 기다립니다.'}</p>
+      <ul class="tl">
+        <li class="on">접수<span>${state.app.at}</span></li>
+        <li class="${sent && sent.appId===state.app.id?'on':''}">승인<span>${sent && sent.appId===state.app.id?sent.at:'대기 중'}</span></li>
+        <li class="${sent && sent.appId===state.app.id?'on':''}">발송<span>${sent && sent.appId===state.app.id?'지메일':'—'}</span></li>
+      </ul>
+      ${sent && sent.appId===state.app.id ? '<div class="btn-row" style="margin-top:18px"><button class="btn btn-primary" type="button" data-goto="4">메일 확인으로</button></div>' : '<div class="btn-row" style="margin-top:18px"><button class="btn btn-quiet" type="button" id="peekAdmin">관리자 승인 화면 보기</button></div>'}
+    </div>
+    <p class="note">관리자 탭에서 승인하면 이 화면이 함께 바뀝니다.</p>`;
+    $$('[data-goto]',box).forEach(b=>b.addEventListener('click',()=>setStep(Number(b.dataset.goto))));
+    const pk=$('#peekAdmin'); if(pk) pk.addEventListener('click',()=>setView('admin'));
+    $('#applyForm').classList.add('hidden');
+  }else{
+    box.innerHTML='';
+    $('#applyForm').classList.remove('hidden');
+  }
+}
+function initApply(){
+  $('#applyForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    const name=$('#fName').value.trim(), nick=$('#fNick').value.trim(), mail=$('#fMail').value.trim();
+    if(!name||!nick||!mail){ toast('이름·닉네임·Gmail을 확인해 주세요.'); return; }
+    if(!$('#fConsent').checked){ toast('개인정보 수집·이용 동의가 필요합니다.'); return; }
+    state.app={
+      id:appId(), at:fmtTime(new Date()), name, nick, mail,
+      type:$('#fType').value, lecture:state.lecture,
+      reviewed:$('input[name=reviewed]:checked').value
+    };
+    state.sent=null; save();
+    renderApply(); renderAdmin(); updateBadge();
+    toast('신청을 보냈습니다. 류지연 님 승인 대기로 넘어갑니다.');
+  });
+}
+
+/* =========================================================
+   STEP 4 — 메일과 다운로드
+   ========================================================= */
+function mailSubject(l){
+  const label = l.program==='멤버십 수요라이브' ? `수요라이브 ${l.round}`
+    : l.program==='이룸 디지털전환교육원' ? `이룸 ${l.round}`
+    : l.program==='책과강연 화요라이브' ? '화요라이브'
+    : '3대장';
+  const d=l.date.replace(/-/g,'');
+  return `[구글과 AI로 만드는 나의 디지털 사무실] ${d} ${label} 후기 감사 선물 전달`;
+}
+function mailBody(l, a){
+  return `안녕하세요, ${a.name} 님.
+
+「구글과 AI로 만드는 나의 디지털 사무실」 ${l.date.replace(/-/g,'')} ${l.title}에 참여해 주셔서 감사합니다.
+
+약속드린 대로 현재 유료로 판매 중인 전자책을 전달드립니다.
+
+<자료 안내>
+도서명: ${l.ebook.name}
+책 링크: ${l.ebook.free}
+
+본 전자책은 유료 판매 자료이므로 외부 공유는 삼가 부탁드립니다.
+
+전자책을 보시면서 강의에서 다룬 내용을 한 번 더 본인 업무에 맞게 고쳐 보시길 바랍니다.
+
+감사합니다.
+류지연 드림`;
+}
+function renderMail(){
+  const area=$('#mailArea');
+  const appState=state.app, sent=state.sent;
+  if(!appState){
+    area.innerHTML=`<div class="empty"><strong>아직 신청이 없습니다</strong>3단계에서 전자책을 신청하면, 승인 후 이 자리에 지메일이 도착합니다.</div>
+      <div class="btn-row" style="margin-top:18px"><button class="btn btn-ghost" type="button" data-goto="3">전자책 신청으로</button></div>`;
+    $$('[data-goto]',area).forEach(b=>b.addEventListener('click',()=>setStep(Number(b.dataset.goto))));
+    return;
+  }
+  if(!sent || sent.appId!==appState.id){
+    area.innerHTML=`<div class="empty"><strong>승인을 기다리고 있습니다</strong>류지연 님이 승인하면 ${appState.mail} 로 전자책 링크가 발송됩니다. 보통 라이브 종료 후 2~3일 안에 도착합니다.</div>
+      <ul class="tl" style="margin-top:22px">
+        <li class="on">신청 접수<span>${appState.at}</span></li>
+        <li>승인<span>대기 중</span></li>
+        <li>발송<span>—</span></li>
+      </ul>`;
+    return;
+  }
+  const l=LECTURES[sent.lecture];
+  area.innerHTML = `<div class="mailwrap">
+    <div class="inbox">
+      <div class="cap">받은편지함</div>
+      <div class="mailitem on unread">
+        <div class="from">류지연 &lt;${ADMIN_MAIL}&gt;</div>
+        <div class="subj">${mailSubject(l)}</div>
+        <div class="time">${sent.at} · 방금</div>
+      </div>
+    </div>
+    <div class="mailpane">
+      <div class="mh">보낸사람 ${ADMIN_MAIL}<b>${mailSubject(l)}</b></div>
+      <p class="mailbody">${mailBody(l, appState).replace(/</g,'&lt;')}</p>
+      <div class="dl">
+        <div class="name">${l.ebook.name}<small>전자책 ${l.ebook.version} · 큐리어스 무료 배포 상품</small></div>
+        <a class="btn btn-primary" href="${l.ebook.free}" target="_blank" rel="noopener">전자책 열기</a>
+      </div>
+      <p class="note">유료 판매 자료입니다. 링크를 외부에 공유하지 마세요. 참여자의 피클이 이 링크를 열어 저장하고, 확인이 끝나면 아래 버튼을 눌러 기록합니다.</p>
+      <div class="btn-row" style="margin-top:14px">
+        <button class="btn btn-ghost" type="button" id="confirmDl">${sent.downloaded?'다운로드 확인 완료 · '+sent.downloadAt:'다운로드 확인'}</button>
+        <div class="spacer"></div>
+        <button class="btn btn-quiet" type="button" data-goto="1">강의 목록으로</button>
+      </div>
+    </div>
+  </div>`;
+  $$('[data-goto]',area).forEach(b=>b.addEventListener('click',()=>setStep(Number(b.dataset.goto))));
+  const c=$('#confirmDl');
+  if(c) c.addEventListener('click',()=>{
+    if(sent.downloaded){ toast('이미 확인 완료로 기록되어 있습니다.'); return; }
+    sent.downloaded=true; sent.downloadAt=fmtTime(new Date()); save(); renderMail();
+    toast('참여자 피클이 다운로드까지 확인했습니다.');
+  });
+}
+
+/* =========================================================
+   ADMIN
+   ========================================================= */
+function updateBadge(){
+  const n = state.app && !(state.sent && state.sent.appId===state.app.id) ? 1 : 0;
+  const b=$('#adminBadge'); b.textContent=n; b.classList.toggle('on', n>0);
+}
+function renderAdmin(){
+  const a=state.app;
+  const pending = a && !(state.sent && state.sent.appId===a.id);
+  $('#adminAlarm').innerHTML = pending
+    ? `<div class="alarm"><span class="pulse"></span><p><b>피클 알람 — 새 전자책 신청 ${'1'}건</b><br>${a.at} 접수 · ${a.nick}(${a.name}) · 후기 등록 확인 · 대조 결과 정상. 승인만 남았습니다.</p></div>`
+    : '';
+  const l = pending ? LECTURES[a.lecture] : null;
+  $('#queue').innerHTML = pending ? `
+    <div class="qrow" id="qrow">
+      <div class="top">
+        <div>
+          <div class="who">${a.name}<span>${a.nick}</span></div>
+          <div class="sub">${a.id} · ${a.at} · ${a.type}</div>
+        </div>
+        <div class="state"><span class="tag">승인 대기</span><span class="chev">▾</span></div>
+      </div>
+      <div class="detail"><div class="detail-in">
+        <dl class="kv">
+          <dt>강의</dt><dd>${l.md} ${l.program} ${l.round} — ${l.title}</dd>
+          <dt>전자책</dt><dd>${l.ebook?`${l.ebook.name} · ${l.ebook.version} · 무료 상품 ${l.ebook.free.split('/').pop()}`:'이 회차 전자책은 아직 등록 전입니다'}</dd>
+          <dt>Gmail</dt><dd>${a.mail}</dd>
+          <dt>후기 등록</dt><dd>${a.reviewed==='yes'?'네, 등록했습니다':'아직 등록하지 않았습니다'}</dd>
+          <dt>대조 결과</dt><dd>이메일 정확 일치 · 중복 신청 없음 · 개인정보 동의 확인</dd>
+        </dl>
+        <div class="mailprev">
+          <div class="lbl">발송될 메일</div>
+          <div class="s">${l.ebook?mailSubject(l):'전자책을 등록하면 제목이 만들어집니다'}</div>
+          <div class="b">${l.ebook?mailBody(l,a).replace(/</g,'&lt;'):'전자책 링크가 등록되면 본문이 채워집니다.'}</div>
+        </div>
+        <div class="btn-row" style="margin-top:16px">
+          <button class="btn btn-primary" type="button" id="approveBtn" ${l.ebook?'':'disabled'}>승인 및 발송</button>
+          <button class="btn btn-ghost" type="button" id="holdBtn">보류</button>
+          <div class="spacer"></div>
+          <span class="hint">발송하면 09_후기선물에 발송일시가 기록됩니다.</span>
+        </div>
+        ${l.ebook?'':'<p class="note">이 회차 전자책은 아직 등록 전입니다. 06_전자책Master에 링크가 들어오면 이 버튼이 열립니다.</p>'}
+      </div></div>
+    </div>` : `<div class="empty"><strong>대기 중인 신청이 없습니다</strong>참여자 탭 3단계에서 신청을 보내면 이 자리에 알람이 뜹니다.</div>
+      <div class="btn-row" style="margin-top:16px"><button class="btn btn-ghost" type="button" id="goMember">참여자 탭에서 신청 만들기</button></div>`;
+
+  if(pending){
+    const row=$('#qrow');
+    row.querySelector('.top').addEventListener('click',()=>row.classList.toggle('open'));
+    row.classList.add('open');
+    $('#approveBtn').addEventListener('click',()=>approve(a));
+    $('#holdBtn').addEventListener('click',()=>toast('보류로 표시했습니다. 실제 운영에서는 09_후기선물에 사유가 남습니다.'));
+  }else{
+    const g=$('#goMember'); if(g) g.addEventListener('click',()=>setView('member'));
+  }
+
+  $('#queueCount').textContent = `대기 ${pending?1:0}건`;
+  $('#sentBox').innerHTML = state.sentLog.length ? `
+    <h2 class="sec">오늘 발송</h2>
+    ${state.sentLog.map(s=>`<div class="sentrow">
+      <div>${s.name} · ${s.nick}<div class="meta">${s.lectureTitle} · ${s.id} · ${s.at}</div></div>
+      <div class="okmark">발송 완료</div>
+    </div>`).join('')}` : '';
+}
+function approve(a){
+  const l=LECTURES[a.lecture];
+  state.sent={ appId:a.id, lecture:a.lecture, at:fmtTime(new Date()), downloaded:false, downloadAt:'' };
+  state.sentLog.push({ id:a.id, name:a.name, nick:a.nick, at:state.sent.at, lectureTitle:l.title });
+  save(); renderAdmin(); renderApply(); renderMail(); updateBadge();
+  toast('승인했습니다. 지메일로 전자책 링크를 발송했습니다.');
+}
+
+/* =========================================================
+   초기화
+   ========================================================= */
+$('#resetBtn').addEventListener('click',()=>{
+  state={view:'member',step:1,lecture:'20261104_수요11',reviewed:false,draft:'',app:null,sent:null,sentLog:[]};
+  try{ localStorage.removeItem(STORE_KEY); }catch(e){}
+  $('#applyForm').reset(); $('#fName').value='김서연'; $('#fNick').value='서연의 작업실'; $('#fMail').value='seoyeon.demo@gmail.com'; $('#fConsent').checked=true;
+  $('#reviewLecture').value=state.lecture;
+  setView('member'); setStep(1); syncLecture(); renderLists(); renderApply(); renderAdmin(); updateBadge();
+  toast('시연 상태를 처음으로 되돌렸습니다.');
+});
+
+renderLists();
+initReview();
+initApply();
+setView(state.view);
+setStep(state.step || 1);
+renderAdmin();
+updateBadge();
+if(state.step===4) renderMail();
+if(state.step===3) renderApply();
+</script>
+</body>
+</html>
