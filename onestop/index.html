@@ -570,7 +570,7 @@
         </div>
         <div class="body">
           <h2>나의 디지털 사무실, 오늘부터 운영합니다</h2>
-          <p class="meta"><span class="nw">멤버십 수요라이브 12차</span> · <span class="nw">20:00–21:00 (한국)</span> / <span class="nw">19:00–20:00 (중국)</span></p>
+          <p class="meta"><span class="nw">멤버십 수요라이브 12차</span> · <span class="nw">20:00–21:00 (한국)</span></p>
           <p class="meta tools">Google Workspace 통합 · Gemini · Gemini Notebook</p>
           <div class="btn-row">
             <a class="btn btn-primary" href="https://curious-500.com/v2/study/5064?leader_code=9499" target="_blank" rel="noopener">멤버십 무료 신청</a>
@@ -594,6 +594,7 @@
 
       <h2 class="sec">다음 강의</h2>
       <div class="list" id="listUpcoming"></div>
+      <p class="note">※ 11.25 CAL 04는 1월로 일정이 옮겨져 이 목록에서 내렸습니다.</p>
     </div>
 
     <!-- STEP 2 -->
@@ -753,19 +754,12 @@ const LECTURES = {
   '20261118_수요12': {
     id:'20261118_수요12', date:'2026-11-18', md:'11.18', dow:'수', program:'멤버십 수요라이브', round:'12차',
     title:'나의 디지털 사무실, 오늘부터 운영합니다',
-    time:'20:00–21:00 (한국) / 19:00–20:00 (중국)',
+    time:'20:00–21:00 (한국)',
     tools:'Google Workspace 통합 · Gemini · Gemini Notebook',
     paid:CQ+'/study/5063?leader_code=9499', free:CQ+'/study/5064?leader_code=9499',
     price:'50,000원', bucket:'today',
     ebook:{ id:'E20261118_SUYO12', name:'나의 디지털 사무실, 오늘부터 운영합니다', version:'시연용', demo:true,
       free:CQ+'/study/5064?leader_code=9499', paid:null }
-  },
-  '20261125_이룸CAL04': {
-    id:'20261125_이룸CAL04', date:'2026-11-25', md:'11.25', dow:'수', program:'이룸 디지털전환교육원', round:'CAL 04',
-    title:'Google Calendar 실행 시스템 만들기 [CAL04] 협업 일정편',
-    tools:'Google Calendar · Gemini',
-    paid:CQ+'/study/5068?leader_code=9499', free:CQ+'/study/5069?leader_code=9499',
-    price:'50,000원', bucket:'upcoming', ebook:null
   },
   '20261121_북클럽22기_02': {
     id:'20261121_북클럽22기_02', date:'2026-11-21', md:'11.21', dow:'토', program:'AI 실전 북클럽', round:'22기 2회차',
@@ -849,11 +843,6 @@ const EXAMPLE_NOTES = {
     '메일과 캘린더가 한 곳에서 이어지는 장면을 직접 보니 왜 이렇게 쓰는지 알겠더라고요. 내일 아침 브리핑부터 옮겨 볼 생각입니다.',
     '도구를 더 배우는 일이 아니라 이미 쓰는 것들을 한자리에 모으는 일이라는 말이 와닿았어요. 이번 주에 업무 창고부터 정리해 볼 거예요.',
     '제미나이 노트북에 강의 자료를 모아 두는 장면이 인상 깊었습니다. 오늘 받은 자료부터 그대로 넣어 보려고요.'
-  ],
-  '20261125_이룸CAL04': [
-    '팀 일정을 한 화면에서 맞추는 장면이 인상 깊었어요. 다음 주 팀 회의 일정부터 같은 방식으로 잡아 볼 생각입니다.',
-    '일정을 쌓는 일과 약속을 지키는 일은 다르다는 말이 마음에 남았습니다. 제 캘린더의 빈 시간부터 다시 보려고요.',
-    '공유 캘린더를 만들 때 권한을 나눠 두는 부분이 도움이 됐습니다. 내일 팀 캘린더 설정을 바꿔 볼 거예요.'
   ]
 };
 
@@ -863,8 +852,7 @@ const DEFAULT_SEE = {
   '20261104_수요11':'지시문을 매뉴얼로 바꾸던 장면',
   '20261103_화요':'이미 쓴 글을 다시 꺼내 쓰던 장면',
   '20261021_수요10':'가진 자료에서 한 편을 뽑던 순서',
-  '20261118_수요12':'메일과 캘린더가 이어지던 화면',
-  '20261125_이룸CAL04':'팀 일정을 맞추던 화면'
+  '20261118_수요12':'메일과 캘린더가 이어지던 화면'
 };
 const DEFAULT_CHANGE = {
   '20261117_이룸DOC09':'지난 회의록 한 편을 골라 결정과 할 일을 따로 표시해 두려고 합니다.',
@@ -872,8 +860,7 @@ const DEFAULT_CHANGE = {
   '20261104_수요11':'자주 쓰는 지시문 하나를 매뉴얼로 남겨 두려고 합니다.',
   '20261103_화요':'이미 쓴 글 한 편을 골라 소개 문장으로 다시 쓰는 연습을 해보려고 합니다.',
   '20261021_수요10':'지난 사진과 메모를 모아 짧은 자료 한 편을 완성해 보려고 합니다.',
-  '20261118_수요12':'업무에 흩어진 자료를 한곳에 모으는 일부터 시작해 보려고 합니다.',
-  '20261125_이룸CAL04':'다음 주 팀 일정을 공유 캘린더에 같은 방식으로 잡아 보려고 합니다.'
+  '20261118_수요12':'업무에 흩어진 자료를 한곳에 모으는 일부터 시작해 보려고 합니다.'
 };
 
 const TAIL_CLEAN = [
