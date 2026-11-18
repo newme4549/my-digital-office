@@ -590,11 +590,14 @@
         <button class="btn btn-primary" type="button" id="goReview">후기로 이어가기</button>
       </div>
       <div class="list" id="listPast"></div>
-      <p class="note">체크한 강의는 후기 작성과 전자책 신청이 한 줄로 이어집니다. 전자책이 등록된 회차는 후기 확인 후 바로 내려받을 수 있습니다. 오늘 12차와 11.17 DOC09는 오늘 시연을 위해 ‘전자책 시연용’으로 열어 두었고, 실제 전자책은 라이브 후 2~3일 안에 발행됩니다.</p>
+      <p class="note">체크한 강의는 후기 작성과 전자책 신청이 한 줄로 이어집니다. 전자책이 등록된 회차는 후기 확인 후 바로 내려받을 수 있습니다. 오늘 12차는 오늘 시연을 위해 ‘전자책 시연용’으로 열어 두었고, 실제 전자책은 라이브 후 2~3일 안에 발행됩니다.</p>
 
       <h2 class="sec">다음 강의</h2>
       <div class="list" id="listUpcoming"></div>
-      <p class="note">※ 11.25 CAL 04는 1월로 일정이 옮겨져 이 목록에서 내렸습니다.</p>
+
+      <h2 class="sec">1월 예정 — 일정이 옮겨진 강의 <span class="n" id="plannedCount"></span></h2>
+      <div class="list" id="listPlanned"></div>
+      <p class="note">※ 큐리어스에 게시된 진행 일정 그대로입니다. 문서 9회차는 11.17 → <b>2027.01.20(수) 20:00–21:00</b>, 캘린더 4회차는 11.25 → <b>2027.01.27(수) 20:00–21:00</b>(한국 시간)로 옮겨졌습니다. 신청은 두 회차 모두 지금 열려 있고, 후기와 전자책은 강의가 끝난 뒤에 열립니다.</p>
     </div>
 
     <!-- STEP 2 -->
@@ -728,12 +731,13 @@
     <summary>시연 순서 보기</summary>
     <ol>
       <li>참여자 탭 01 — 오늘 수요라이브 12차 카드에서 ‘멤버십 무료 신청’을 보여 줍니다. 카드 왼쪽을 체크하면 오늘 회차도 같은 흐름으로 이어집니다.</li>
-      <li>지난 강의에서 11.17 DOC09·11.07·11.04 가운데 2~3개를 체크 → 화면 아래에 붙는 ‘선택한 N개’ 막대 확인 → [후기로 이어가기]. (모바일에서는 막대가 화면 맨 아래에 고정됩니다.)</li>
+      <li>지난 강의에서 11.07·11.04·11.03 가운데 2~3개를 체크 → 화면 아래에 붙는 ‘선택한 N개’ 막대 확인 → [후기로 이어가기]. (모바일에서는 막대가 화면 맨 아래에 고정됩니다.)</li>
       <li>02 후기 — 강의별로 관점 1·2·3 예시를 눌러 보거나 직접 한 줄 입력 → [피클에게 초안 부탁]. 소감이 다르면 See·Feel·Change 초안도 달라집니다.</li>
       <li>각 카드의 ‘큐리어스에 후기를 등록했습니다’를 체크 → [전자책 신청으로].</li>
-      <li>03 전자책 신청 — 신청 대상과 항목을 훑고 [선택한 강의 신청 보내기]. 여러 건이 한 번에 접수됩니다. 11.18·11.17은 ‘전자책 시연용’으로 표시됩니다.</li>
+      <li>03 전자책 신청 — 신청 대상과 항목을 훑고 [선택한 강의 신청 보내기]. 여러 건이 한 번에 접수됩니다. 11.18은 ‘전자책 시연용’으로 표시되고, 지난 회차는 등록된 전자책 판본이 표시됩니다.</li>
       <li>상단 [관리자 승인] — 알람 확인 → 전체 선택 또는 몇 건만 골라 [선택한 건 승인 및 발송]. 시연용 회차도 그대로 발송됩니다.</li>
       <li>참여자 탭 04 — 지메일 목록에서 강의별 메일을 열고 [전자책 열기], [다운로드 확인]. 승인 전 메일을 누르면 대기 상태를 보여 줍니다.</li>
+      <li>‘1월 예정 — 일정이 옮겨진 강의’에는 문서 9회차(2027.01.20)와 캘린더 4회차(2027.01.27)가 실제 연기 일정으로 들어 있습니다. 일정 변경을 함께 짚어 주면 좋습니다.</li>
       <li>시연이 끝나면 아래 [시연 초기화]로 처음 상태로 되돌립니다.</li>
     </ol>
   </details>
@@ -768,13 +772,19 @@ const LECTURES = {
     paid:CQ+'/study/4846?leader_code=9499', free:null,
     price:'북클럽 참여자', bucket:'upcoming', ebook:null
   },
-  '20261117_이룸DOC09': {
-    id:'20261117_이룸DOC09', date:'2026-11-17', md:'11.17', dow:'화', program:'이룸 디지털전환교육원', round:'DOC 09',
+  /* 11.17 문서 9회차 → 큐리어스 진행 일정 2027.01.20(수) 20:00–21:00 로 연기 */
+  '20270120_이룸DOC09': {
+    id:'20270120_이룸DOC09', date:'2027-01-20', md:'01.20', dow:'수', program:'이룸 디지털전환교육원', round:'DOC 09',
     title:'Google Docs AI 기록 시스템 [DOC09] 협업 기록편',
     paid:CQ+'/study/5065?leader_code=9499', free:CQ+'/study/5067?leader_code=9499',
-    bucket:'past',
-    ebook:{ id:'E20261117_DOC09', name:'Google Docs AI 기록 시스템 [DOC09] 협업 기록편', version:'시연용', demo:true,
-      free:CQ+'/study/5067?leader_code=9499', paid:null }
+    price:'50,000원', bucket:'planned', movedFrom:'11.17', ebook:null
+  },
+  /* 11.25 캘린더 4회차 → 큐리어스 진행 일정 2027.01.27(수) 20:00–21:00 로 연기 */
+  '20270127_이룸CAL04': {
+    id:'20270127_이룸CAL04', date:'2027-01-27', md:'01.27', dow:'수', program:'이룸 디지털전환교육원', round:'CAL 04',
+    title:'Google Calendar 실행 시스템 [CAL04] 협업 일정편',
+    paid:CQ+'/study/5068?leader_code=9499', free:CQ+'/study/5069?leader_code=9499',
+    price:'50,000원', bucket:'planned', movedFrom:'11.25', ebook:null
   },
   '20261107_3대장': {
     id:'20261107_3대장', date:'2026-11-07', md:'11.07', dow:'토', program:'Google과 AI 3대장', round:'',
@@ -814,11 +824,6 @@ const LECTURES = {
    소감 → 후기 초안 (See · Feel · Change · 추천)
    ========================================================= */
 const EXAMPLE_NOTES = {
-  '20261117_이룸DOC09': [
-    '회의록에서 결정과 다음 할 일을 따로 떼어 두는 장면이 인상 깊었어요. 지난 회의록 한 편을 같은 구조로 다시 정리해 볼 생각입니다.',
-    '기록은 늘 남기는데 정작 다시 찾지를 못했습니다. 문서 안에서 찾는 기준을 먼저 정하는 순서가 필요하다는 걸 알았어요.',
-    '팀원과 같이 쓰는 문서에 같은 틀을 적용해 보고 싶습니다. 내일 출근하면 회의록 템플릿부터 바꿔 볼 거예요.'
-  ],
   '20261107_3대장': [
     'AI에게 일을 맡기는 순서를 화면에서 직접 보여 주신 게 기억에 남습니다. 질문부터 던지던 제 방식이 왜 엉켰는지 알았어요.',
     '비서를 새로 사는 일이 아니라 제가 반복하는 일을 정리하는 일이라는 말이 와닿았어요. 블로그 초안부터 맡겨 볼 생각입니다.',
@@ -847,7 +852,6 @@ const EXAMPLE_NOTES = {
 };
 
 const DEFAULT_SEE = {
-  '20261117_이룸DOC09':'회의록을 정리하던 화면',
   '20261107_3대장':'업무를 옮겨 적던 문서',
   '20261104_수요11':'지시문을 매뉴얼로 바꾸던 장면',
   '20261103_화요':'이미 쓴 글을 다시 꺼내 쓰던 장면',
@@ -855,7 +859,6 @@ const DEFAULT_SEE = {
   '20261118_수요12':'메일과 캘린더가 이어지던 화면'
 };
 const DEFAULT_CHANGE = {
-  '20261117_이룸DOC09':'지난 회의록 한 편을 골라 결정과 할 일을 따로 표시해 두려고 합니다.',
   '20261107_3대장':'제 업무 중 반복되는 두 가지를 골라 AI에게 넘기는 문서로 정리해 두려고 합니다.',
   '20261104_수요11':'자주 쓰는 지시문 하나를 매뉴얼로 남겨 두려고 합니다.',
   '20261103_화요':'이미 쓴 글 한 편을 골라 소개 문장으로 다시 쓰는 연습을 해보려고 합니다.',
@@ -1041,7 +1044,7 @@ function buildReview(lec, note){
 }
 
 const ADMIN_MAIL = 'awesome@dtedu.co.kr';
-const STORE_KEY = 'onestop-demo-v3';
+const STORE_KEY = 'onestop-demo-v4';
 
 /* =========================================================
    상태
@@ -1157,12 +1160,26 @@ function upcomingRowHTML(l){
     <div class="acts">${acts.join('')}</div>
   </div>`;
 }
+function plannedRowHTML(l){
+  const acts=[];
+  if(l.free) acts.push(`<a href="${l.free}" target="_blank" rel="noopener">무료 신청</a>`);
+  if(l.paid) acts.push(`<a class="mute" href="${l.paid}" target="_blank" rel="noopener">유료 신청</a>`);
+  return `<div class="row">
+    <div class="when"><b>${l.md}</b>${l.dow} · ${l.round||l.program}</div>
+    <div class="what"><div class="prog">${l.program}${l.price?' · '+l.price:''}${l.movedFrom?` · ${l.movedFrom} → ${l.md}`:''}</div><div class="title">${l.title}</div></div>
+    <div class="tagcol"><span class="tag">1월 예정</span></div>
+    <div class="acts">${acts.join('')}</div>
+  </div>`;
+}
 function renderLists(){
   const past=pastLectures();
   $('#listPast').innerHTML = past.map(rowHTML).join('');
   $('#pastCount').textContent = `${past.length}개 강의`;
   const up=Object.values(LECTURES).filter(l=>l.bucket==='upcoming').sort((a,b)=>a.date.localeCompare(b.date));
   $('#listUpcoming').innerHTML = up.map(upcomingRowHTML).join('');
+  const pl=Object.values(LECTURES).filter(l=>l.bucket==='planned').sort((a,b)=>a.date.localeCompare(b.date));
+  const plEl=$('#listPlanned'); if(plEl) plEl.innerHTML = pl.map(plannedRowHTML).join('');
+  const plCnt=$('#plannedCount'); if(plCnt) plCnt.textContent = `${pl.length}개 강의`;
 
   bindPickInputs();
   bindRowTap();
