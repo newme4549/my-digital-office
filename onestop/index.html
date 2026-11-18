@@ -4,21 +4,44 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>나의 디지털 사무실 · 원스탑</title>
+<meta name="description" content="강의 하나를 고르면 소감 한 줄이 See·Feel·Change 후기 초안이 되고, 전자책 신청·승인·지메일 발송까지 한 흐름으로 이어집니다.">
+<meta property="og:title" content="나의 디지털 사무실 · 원스탑">
+<meta property="og:description" content="강의 선택 → 소감 한 줄 → 후기 초안 → 전자책 신청 → 승인 → 지메일. 네 단계로 이어지는 원스탑 흐름.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://newme4549.github.io/my-digital-office/onestop/">
+<meta property="og:site_name" content="류지연 — 나의 디지털 사무실">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="https://newme4549.github.io/my-digital-office/og-intro.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="류지연 — 구글과 AI로, 일이 가벼워지는 순서를 만듭니다.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="나의 디지털 사무실 · 원스탑">
+<meta name="twitter:description" content="강의 선택 → 후기 초안 → 전자책 신청 → 승인 → 지메일. 네 단계 원스탑 흐름.">
+<meta name="twitter:image" content="https://newme4549.github.io/my-digital-office/og-intro.png">
+<meta name="theme-color" content="#FAF9F6">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png" sizes="180x180">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
 <style>
   :root{
     --paper:#FAF9F6;
     --card:#FFFFFF;
     --ink:#18181B;
     --ink-2:#3B3B3C;
-    --muted:#6E6E68;
-    --faint:#9A9A93;
+    --muted:#5C5C57;
+    --faint:#6C6C66;
     --line:#E5E5E0;
     --line-2:#D8D8D2;
     --accent:#2C5647;
     --accent-soft:#EDF1EC;
     --signal:#A2482B;
-    --sans:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans CJK KR","Malgun Gothic",system-ui,sans-serif;
-    --serif:"Nanum Myeongjo","Noto Serif CJK KR","Apple SD Gothic Neo",Georgia,serif;
+    --sans:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans CJK KR","Malgun Gothic",system-ui,sans-serif;
+    --serif:"Noto Serif KR","Nanum Myeongjo","Noto Serif CJK KR","Apple SD Gothic Neo",Georgia,serif;
     --r:2px;
   }
   *{box-sizing:border-box}
@@ -45,7 +68,8 @@
     backdrop-filter:saturate(120%) blur(8px);
     border-bottom:1px solid var(--line);
   }
-  .brand{display:flex;align-items:baseline;gap:10px;min-width:0}
+  .brand{display:flex;align-items:baseline;gap:10px;min-width:0;text-decoration:none}
+  a.brand:hover .mark{color:var(--accent)}
   .brand .mark{font-family:var(--serif);font-size:16px;letter-spacing:0.01em;white-space:nowrap}
   .brand .slash{color:var(--line-2)}
   .brand .sub{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
@@ -110,7 +134,7 @@
     border-radius:var(--r);
   }
   .rail-note p{margin:0;font-size:12.5px;line-height:1.65;color:#33473E}
-  .rail-note .k{display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#5C7768;margin-bottom:6px}
+  .rail-note .k{display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#46604F;margin-bottom:6px}
 
   /* ---------- panel ---------- */
   .panel{min-width:0;max-width:760px}
@@ -147,6 +171,7 @@
   .btn-quiet{padding:0;min-height:0;color:var(--accent);font-size:13px;border-bottom:1px solid #C4D3C9;border-radius:0;padding-bottom:2px}
   .btn-quiet:hover{color:#1F4034;border-color:var(--accent)}
   a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  body input:focus-visible,body select:focus-visible,body textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px;box-shadow:none}
   .btn[disabled]{opacity:.38;cursor:not-allowed}
   .btn-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
   .btn-row .spacer{flex:1 1 auto}
@@ -154,8 +179,15 @@
   /* ---------- today block ---------- */
   .today{
     border:1px solid var(--line-2);background:var(--card);
-    display:grid;grid-template-columns:104px minmax(0,1fr);
+    display:grid;grid-template-columns:44px 104px minmax(0,1fr);
+    transition:background .15s;
   }
+  .today .pickbox{
+    display:flex;align-items:flex-start;justify-content:center;
+    padding-top:26px;border-right:1px solid var(--line);cursor:pointer;
+  }
+  .today .pickbox:hover{background:#F4F7F2}
+  .today.sel{background:#F7FAF5}
   .today .date{
     border-right:1px solid var(--line);padding:24px 18px;
     display:flex;flex-direction:column;gap:2px;justify-content:flex-start;
@@ -188,15 +220,20 @@
   .row .title{font-size:14px;line-height:1.45;margin-top:2px}
   .row .acts{display:flex;align-items:center;gap:14px;justify-self:end}
   .row .acts a{font-size:12.5px;color:var(--accent);border-bottom:1px solid #C4D3C9;padding-bottom:1px}
-  .row .acts a.mute{color:#8C8C85;border-color:var(--line-2)}
+  .row .acts a.mute{color:var(--faint);border-color:var(--line-2)}
   .tag{font-size:10.5px;letter-spacing:.04em;color:var(--muted);border:1px solid var(--line-2);border-radius:999px;padding:2px 8px;white-space:nowrap}
   .tag.ready{color:var(--accent);border-color:#C4D3C9;background:var(--accent-soft)}
   .tag.wait{color:var(--signal);border-color:#E4D3CB;background:#FBF4F0}
+  .tag.demo{color:#4A5A6B;border-color:#CBD5DD;background:#F2F5F8}
 
   /* ---------- pick rows ---------- */
-  .row.pick{grid-template-columns:22px 92px minmax(0,1fr) auto auto;gap:14px}
+  .row.pick{grid-template-columns:32px 92px minmax(0,1fr) auto auto;gap:14px;cursor:pointer}
   .row.pick input{margin:0;flex:0 0 auto}
-  .row.pick .pickbox{display:flex;align-items:center;justify-content:center;align-self:stretch;cursor:pointer}
+  .row.pick .pickbox{
+    display:flex;align-items:center;justify-content:center;align-self:stretch;cursor:pointer;
+    min-height:44px;margin:-6px -4px -6px -8px;padding:6px 4px 6px 8px;border-radius:2px;
+  }
+  .row.pick .pickbox:hover{background:#F1F1EB}
   .row.pick.sel{background:#F4F7F2}
   .row.pick.sel .title{font-weight:500}
   .row.pick.sel .when b{color:var(--accent)}
@@ -268,10 +305,12 @@
   }
   .sfs .cell{padding:10px 11px;border-right:1px solid var(--line);min-width:0}
   .sfs .cell:last-child{border-right:0}
-  .sfs .k{display:block;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:#6C8577}
-  .sfs p{margin:4px 0 0;font-size:11px;line-height:1.55;color:var(--ink-2);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .sfs .k{display:block;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:#4F6B5C;white-space:nowrap}
+  .sfs p{margin:4px 0 0;font-size:11.5px;line-height:1.55;color:var(--ink-2);overflow-wrap:anywhere}
+  .sfs p.ph{color:var(--faint)}
   .sfs.empty p{color:var(--faint)}
   .sfsnote{font-size:11px;color:var(--faint);margin:7px 0 0}
+  .sfsnote.warn{color:var(--signal)}
 
   .p2foot{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:22px;padding-top:18px;border-top:1px solid var(--line-2)}
   .p2foot .spacer{flex:1 1 auto}
@@ -311,7 +350,8 @@
   .mailitem .subj{font-size:12px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .mailitem .time{font-size:10.5px;color:var(--faint);margin-top:3px;font-variant-numeric:tabular-nums}
   .mailitem.unread .from{font-weight:600}
-  .mailitem.pending{opacity:.62}
+  .mailitem.pending .from{color:var(--muted)}
+  .mailitem.pending .subj{color:var(--signal)}
   .mailpane{padding:22px 24px 24px}
   .mailpane .mh{font-size:11px;color:var(--faint);letter-spacing:.04em;margin-bottom:14px}
   .mailpane .mh b{color:var(--ink);font-weight:600;font-size:13px;letter-spacing:-0.01em;display:block;margin-top:2px;line-height:1.45}
@@ -403,10 +443,11 @@
     .steps li.on button{padding-left:8px}
     .steps li.on button::before{top:8px;bottom:8px}
     .rail-note{display:none}
-    .today{grid-template-columns:1fr}
-    .today .date{flex-direction:row;align-items:baseline;gap:8px;border-right:0;border-bottom:1px solid var(--line);padding:14px 20px}
+    .today{grid-template-columns:44px minmax(0,1fr)}
+    .today .pickbox{grid-row:1 / span 2;align-items:flex-start;padding-top:16px;border-right:1px solid var(--line)}
+    .today .date{grid-column:2;flex-direction:row;align-items:baseline;gap:8px;border-right:0;border-bottom:1px solid var(--line);padding:14px 16px 14px 0}
     .today .date .d1{font-size:19px}
-    .today .body{padding:18px 20px 20px}
+    .today .body{grid-column:2;padding:18px 16px 20px}
     .today h2{font-size:17px}
     .row{
       display:grid;grid-template-columns:1fr auto;
@@ -421,18 +462,25 @@
     .row .acts a{font-size:12px}
     .row .acts .btn-quiet{font-size:12px}
     .row.pick{
-      grid-template-columns:22px minmax(0,1fr) auto;
+      grid-template-columns:32px minmax(0,1fr) auto;
       grid-template-areas:"pick when tag" "pick what what" "pick acts acts";
       gap:5px 10px;
     }
-    .row.pick .pickbox{grid-area:pick;align-self:start;padding-top:1px}
+    .row.pick .pickbox{grid-area:pick;align-self:start;padding-top:6px;margin:-6px -4px 0 -8px}
     .row.pick .when{grid-area:when}
     .row.pick .what{grid-area:what}
     .row.pick .tagcol{grid-area:tag}
     .row.pick .acts{grid-area:acts}
-    .pickbar{top:0;margin:14px 0 0;padding:10px 12px}
+    .pickbar{
+      position:fixed;left:0;right:0;bottom:0;top:auto;z-index:60;
+      margin:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));
+      border-radius:0;border-left:0;border-right:0;border-bottom:0;
+      box-shadow:0 -6px 20px rgba(24,24,27,.10);
+    }
     .pickbar .pk-list{max-width:100%;flex-basis:100%;white-space:normal}
     .pickbar .btn-primary{flex:1 1 auto}
+    #p1{padding-bottom:148px}
+    .toast{bottom:104px}
     .grid2{grid-template-columns:1fr}
     .mailwrap{grid-template-columns:minmax(0,1fr)}
     .inbox,.mailpane{min-width:0}
@@ -479,11 +527,11 @@
 <body>
 
 <header class="topbar">
-  <div class="brand">
+  <a class="brand" href="../" aria-label="자기소개 페이지로 돌아가기">
     <span class="mark">나의 디지털 사무실</span>
     <span class="slash">/</span>
     <span class="sub">원스탑</span>
-  </div>
+  </a>
   <div class="topmeta">수요라이브 12차 · 2026.11.18 수</div>
   <div class="switch" role="tablist" aria-label="화면 전환">
     <button role="tab" id="tab-member" aria-selected="true" data-view="member">참여자</button>
@@ -512,9 +560,10 @@
     <div class="step-panel" id="p1">
       <p class="eyebrow"><span class="dot"></span>Step 01 — 강의 선택</p>
       <h1>오늘의 강의, 그리고 지난 강의</h1>
-      <p class="lead">오늘 회차는 아래에서 바로 신청합니다. 지난 강의는 여러 개를 한꺼번에 골라 두면 후기와 전자책 신청까지 한 번에 이어집니다.</p>
+      <p class="lead">오늘 회차도 아래 카드 왼쪽을 체크하면 라이브 직후에 후기와 전자책 신청을 같은 흐름으로 진행할 수 있습니다. 지난 강의는 여러 개를 한꺼번에 골라 두면 한 번에 이어집니다.</p>
 
       <div class="today">
+        <label class="pickbox" for="pk-20261118_수요12" title="이 회차 선택"><input type="checkbox" id="pk-20261118_수요12" data-pick="20261118_수요12" aria-label="나의 디지털 사무실, 오늘부터 운영합니다 선택"></label>
         <div class="date">
           <span class="d1">11.18</span>
           <span class="d2">수 · 20:00</span>
@@ -541,7 +590,7 @@
         <button class="btn btn-primary" type="button" id="goReview">후기로 이어가기</button>
       </div>
       <div class="list" id="listPast"></div>
-      <p class="note">체크한 강의는 후기 작성과 전자책 신청이 한 줄로 이어집니다. 전자책이 등록된 회차는 후기 확인 후 바로 내려받을 수 있고, 오늘 회차의 전자책은 라이브 후 2~3일 안에 발행됩니다.</p>
+      <p class="note">체크한 강의는 후기 작성과 전자책 신청이 한 줄로 이어집니다. 전자책이 등록된 회차는 후기 확인 후 바로 내려받을 수 있습니다. 오늘 12차와 11.17 DOC09는 오늘 시연을 위해 ‘전자책 시연용’으로 열어 두었고, 실제 전자책은 라이브 후 2~3일 안에 발행됩니다.</p>
 
       <h2 class="sec">다음 강의</h2>
       <div class="list" id="listUpcoming"></div>
@@ -572,7 +621,7 @@
     <div class="step-panel hidden" id="p3">
       <p class="eyebrow"><span class="dot"></span>Step 03 — 전자책 신청</p>
       <h1>전자책을 신청합니다</h1>
-      <p class="lead">구글폼과 같은 항목입니다. 선택한 강의를 한 번에 접수하고, 류지연 님이 승인하면 강의별로 지메일에 전자책이 발송됩니다.</p>
+      <p class="lead">구글폼과 같은 항목에, 신청할 강의는 1단계에서 고른 것이 자동으로 더해집니다. 선택한 강의를 한 번에 접수하고, 류지연 님이 승인하면 강의별로 지메일에 전자책이 발송됩니다.</p>
 
       <div id="applyStatus"></div>
 
@@ -677,13 +726,13 @@
   <details class="guide">
     <summary>시연 순서 보기</summary>
     <ol>
-      <li>참여자 탭 01 — 오늘 수요라이브 12차 카드에서 ‘멤버십 무료 신청’을 보여 줍니다.</li>
-      <li>같은 화면 지난 강의에서 2~3개를 체크 → 아래에 뜨는 ‘선택한 N개 강의’ 막대 확인 → [후기로 이어가기].</li>
-      <li>02 후기 — 강의별로 소감 예시를 눌러 보거나 직접 한 줄 입력 → [피클에게 초안 부탁]. 소감이 다르면 See·Feel·Change 초안도 달라집니다.</li>
+      <li>참여자 탭 01 — 오늘 수요라이브 12차 카드에서 ‘멤버십 무료 신청’을 보여 줍니다. 카드 왼쪽을 체크하면 오늘 회차도 같은 흐름으로 이어집니다.</li>
+      <li>지난 강의에서 11.17 DOC09·11.07·11.04 가운데 2~3개를 체크 → 화면 아래에 붙는 ‘선택한 N개’ 막대 확인 → [후기로 이어가기]. (모바일에서는 막대가 화면 맨 아래에 고정됩니다.)</li>
+      <li>02 후기 — 강의별로 관점 1·2·3 예시를 눌러 보거나 직접 한 줄 입력 → [피클에게 초안 부탁]. 소감이 다르면 See·Feel·Change 초안도 달라집니다.</li>
       <li>각 카드의 ‘큐리어스에 후기를 등록했습니다’를 체크 → [전자책 신청으로].</li>
-      <li>03 전자책 신청 — 신청 대상과 항목을 훑고 [선택한 강의 신청 보내기]. 여러 건이 한 번에 접수됩니다.</li>
-      <li>상단 [관리자 승인] — 알람 확인 → 전체 선택 또는 몇 건만 골라 [선택한 건 승인 및 발송].</li>
-      <li>참여자 탭 04 — 지메일 목록에서 강의별 메일을 열고 [전자책 열기], [다운로드 확인].</li>
+      <li>03 전자책 신청 — 신청 대상과 항목을 훑고 [선택한 강의 신청 보내기]. 여러 건이 한 번에 접수됩니다. 11.18·11.17은 ‘전자책 시연용’으로 표시됩니다.</li>
+      <li>상단 [관리자 승인] — 알람 확인 → 전체 선택 또는 몇 건만 골라 [선택한 건 승인 및 발송]. 시연용 회차도 그대로 발송됩니다.</li>
+      <li>참여자 탭 04 — 지메일 목록에서 강의별 메일을 열고 [전자책 열기], [다운로드 확인]. 승인 전 메일을 누르면 대기 상태를 보여 줍니다.</li>
       <li>시연이 끝나면 아래 [시연 초기화]로 처음 상태로 되돌립니다.</li>
     </ol>
   </details>
@@ -707,7 +756,9 @@ const LECTURES = {
     time:'20:00–21:00 (한국) / 19:00–20:00 (중국)',
     tools:'Google Workspace 통합 · Gemini · Gemini Notebook',
     paid:CQ+'/study/5063?leader_code=9499', free:CQ+'/study/5064?leader_code=9499',
-    price:'50,000원', bucket:'today', ebook:null
+    price:'50,000원', bucket:'today',
+    ebook:{ id:'E20261118_SUYO12', name:'나의 디지털 사무실, 오늘부터 운영합니다', version:'시연용', demo:true,
+      free:CQ+'/study/5064?leader_code=9499', paid:null }
   },
   '20261125_이룸CAL04': {
     id:'20261125_이룸CAL04', date:'2026-11-25', md:'11.25', dow:'수', program:'이룸 디지털전환교육원', round:'CAL 04',
@@ -719,7 +770,7 @@ const LECTURES = {
   '20261121_북클럽22기_02': {
     id:'20261121_북클럽22기_02', date:'2026-11-21', md:'11.21', dow:'토', program:'AI 실전 북클럽', round:'22기 2회차',
     title:'[북클럽 22기 2회차] 내 개인 AI 업무 시스템 v1.0 완성',
-    tools:'Gemini · Google Workspace',
+    tools:'Claude',
     paid:CQ+'/study/4846?leader_code=9499', free:null,
     price:'북클럽 참여자', bucket:'upcoming', ebook:null
   },
@@ -727,7 +778,9 @@ const LECTURES = {
     id:'20261117_이룸DOC09', date:'2026-11-17', md:'11.17', dow:'화', program:'이룸 디지털전환교육원', round:'DOC 09',
     title:'Google Docs AI 기록 시스템 [DOC09] 협업 기록편',
     paid:CQ+'/study/5065?leader_code=9499', free:CQ+'/study/5067?leader_code=9499',
-    bucket:'past', ebook:null
+    bucket:'past',
+    ebook:{ id:'E20261117_DOC09', name:'Google Docs AI 기록 시스템 [DOC09] 협업 기록편', version:'시연용', demo:true,
+      free:CQ+'/study/5067?leader_code=9499', paid:null }
   },
   '20261107_3대장': {
     id:'20261107_3대장', date:'2026-11-07', md:'11.07', dow:'토', program:'Google과 AI 3대장', round:'',
@@ -837,11 +890,11 @@ const TAIL_CLEAN = [
   /\s*(이|가)?\s*도움이\s*(많이\s*)?(됐|되었)(습니다|어요|다)?\s*$/
 ];
 const FUTURE_RE = /(내일|이번\s*주|다음\s*주|다음\s*달|당장|주말|출근하면|돌아가|앞으로|이번\s*달)/;
-const PLAN_RE = /(볼\s*생각|볼\s*거|할\s*생각|할\s*거|해\s*볼|해볼|해\s*보려|보려고|하려고|해\s*둘|해둘|남겨\s*두|정리해\s*두|적용해\s*보|바꿔\s*볼|써\s*볼|시작해\s*보|만들어\s*볼|넣어\s*보|잡아\s*볼)/;
+const PLAN_RE = /(볼\s*생각|볼\s*거|할\s*생각|할\s*거|해\s*볼|해볼|해\s*보려|보려고|하려고|해\s*둘|해둘|남겨\s*두|정리해\s*두|적용해\s*보|바꿔\s*볼|써\s*볼|시작해\s*보|만들어\s*볼|넣어\s*보|잡아\s*볼|겠습니다|겠어요|하겠|할\s*예정|할\s*계획|해\s*보겠|해보겠)/;
 const PAST_RE = /(았|었|였|봤|했|갔|왔|났|줬|썼|켰|렸|줄었|늘었)/;
 const SEE_WORDS = /(장면|보여|보니|화면|설명|순서|방식|부분|대목|자료|기능|틀|구조|말|예시|문서|시트|캘린더|노트북|프롬프트|명령|기준|템플릿|매뉴얼)/;
 const MARK_RE = /(인상|기억에\s*남|오래\s*남|남았|와닿|신선|흥미)/;
-const FEEL_RE = /(느꼈|느낌|생각이\s*들|마음이|마음에|아쉬|막막|어려웠|어렵|편했|편하|가벼|놀랐|놀라|반가|기뻤|걱정|두려|답답|시원|뿌듯|부끄|민망|헷갈|혼란|기대|부담)/;
+const FEEL_RE = /(느꼈|느낌|생각이\s*들|마음이|마음에|아쉬|막막|어려웠|어렵|편했|편하|가벼|놀랐|놀라|반가|기뻤|걱정|두려|답답|시원|뿌듯|부끄|민망|헷갈|혼란|기대|부담|감동|신기|좋았|좋았어|즐거|재밌)/;
 const ACTION_RE = /(해\s*볼|해볼|해\s*보려|하려|할\s*생각|할\s*거|적용해|바꿔|시작해|시작할|정리해|만들어|써\s*볼|써볼|넣어|옮겨|공유해|보내|등록해|다시\s*정리)/;
 
 function isPlan(s){
@@ -888,12 +941,14 @@ function polite(s){
   return s;
 }
 function cleanClause(raw){
-  let s=(raw||'').trim().replace(/\s+/g,' ').replace(/[.!?。]+$/,'');
+  let s=(raw||'').trim().replace(/\s+/g,' ');
+  const q=/[?？]\s*$/.test(s);
+  s=s.replace(/[.!?。]+$/,'');
   for(const re of TAIL_CLEAN) s=s.replace(re,'');
   s=s.replace(/^[“"'‘\s]+|[”"'’\s]+$/g,'');
   s=s.replace(/[.!?。]+$/,'').trim();
   s=s.replace(/게$/,'것');
-  return s;
+  return q && s ? s+'?' : s;
 }
 function dot(s){
   s=(s||'').trim();
@@ -902,23 +957,29 @@ function dot(s){
 }
 function parseNote(note){
   const sents=(note||'').split(/\n+|(?<=[.!?。])\s+/).map(x=>x.trim()).filter(Boolean);
-  const items=sents.map((s0,i)=>({ i, raw:s0, c:cleanClause(s0), used:'' })).filter(x=>x.c);
+  const items=sents.map((s0,i)=>({ i, raw:s0, c:cleanClause(s0), isQ:/[?？]\s*$/.test(s0), used:'' })).filter(x=>x.c);
   if(!items.length) return { see:'', feel:'', change:'' };
 
-  // Change — 계획·다음에 할 일이 담긴 문장
+  // Change — 계획·다음에 할 일이 담긴 문장 (물음표 문장은 제외)
   let best=null;
-  items.forEach(it=>{ const v=scoreChange(it.raw); if(v>=2 && (!best || v>best.v)) best={it,v}; });
+  items.forEach(it=>{ if(it.isQ) return; const v=scoreChange(it.raw); if(v>=2 && (!best || v>best.v)) best={it,v}; });
   if(best){ best.it.used='change'; }
 
-  // See — 본 것·들은 것
+  // See — 본 것·들은 것 (물음표 문장은 See 후보에서 빼고 그대로 살립니다)
   let seeIt=null;
-  items.forEach(it=>{ if(it.used) return; const v=scoreSee(it.raw); if(v>=1 && (!seeIt || v>seeIt.v)) seeIt={it,v}; });
+  items.forEach(it=>{ if(it.used||it.isQ) return; const v=scoreSee(it.raw); if(v>=1 && (!seeIt || v>seeIt.v)) seeIt={it,v}; });
   if(seeIt) seeIt.it.used='see';
 
   // Feel — 느낀 것
   let feelIt=null;
   items.forEach(it=>{ if(it.used) return; const v=scoreFeel(it.raw); if(v>=1 && (!feelIt || v>feelIt.v)) feelIt={it,v}; });
   if(feelIt) feelIt.it.used='feel';
+
+  // 느낌 칸이 빈 채로 남은 물음표 문장은 Feel로 살립니다 (버리지 않습니다)
+  if(!feelIt){
+    const q=items.find(it=>!it.used && it.isQ);
+    if(q){ q.used='feel'; feelIt={it:q}; }
+  }
 
   // 남은 문장은 See 로 (계획 문장은 제외)
   if(!seeIt){
@@ -937,50 +998,26 @@ function lectureLabel(l){
   if(l.program==='책과강연 화요라이브') return `화요라이브 〈${l.title}〉 잘 들었습니다.`;
   return `〈${l.title}〉 잘 들었습니다.`;
 }
+function isQuestion(s){ return /[?？]\s*$/.test((s||'').trim()); }
+function sent(c){
+  c=(c||'').trim();
+  if(!c) return '';
+  if(/[?？]$/.test(c)) return c.replace(/？$/,'?');
+  if(/[.!。]$/.test(c)) return c;
+  return c+'.';
+}
+/* 사람은 자기 소감에 쓴 것만 씁니다. 소감에 없는 감정·시점·행동은 지어내지 않습니다. */
 const SEE_FRAMES = [
-  (c)=>`수업에서 ${dot(c)} 이 부분이 가장 오래 남았습니다.`,
-  (c)=>`${c} 말로만 들었으면 지나쳤을 부분인데, 화면에서 같이 보니 이해가 빨랐어요.`,
-  (c)=>`오늘 수업에서 ${c} 이 부분에서 제가 무엇 때문에 막혔는지 알 것 같았습니다.`,
-  (c)=>`${c} 이 부분은 따로 적어 두었습니다.`
+  (c)=>`${sent(c)} 이 부분이 오늘 가장 또렷하게 남았습니다.`,
+  (c)=>`${sent(c)} 이 부분이 다시 떠오릅니다.`,
+  (c)=>`${sent(c)} 이 부분에서 흐름이 잡혔습니다.`
 ];
-const FEEL_HAS = [
-  (f)=>`그때 ${f} 듣는 동안 미뤄 둔 일들이 하나씩 떠올랐어요.`,
-  (f)=>`${f} 수업이 끝나고도 그 생각이 계속 남았습니다.`,
-  (f)=>`특히 ${f} 이번 주에 미뤄 둔 일이 왜 미뤄졌는지 알 것 같았어요.`
-];
-const FEEL_STUCK = [
-  ()=>`그동안 이 부분에서 자주 멈췄는데, 오늘은 왜 그랬는지 알았어요.`,
-  ()=>`미뤄 두고만 있던 일이라 걱정이 앞섰는데, 순서를 보고 나니 마음이 조금 놓였습니다.`,
-  ()=>`혼자 붙잡고 있을 때는 막막했던 부분이었는데, 오늘은 다음에 무엇을 할지 보였습니다.`
-];
-const FEEL_GOOD = [
-  ()=>`기대보다 훨씬 편하게 따라갈 수 있었고, 끝나고 나서 마음이 가벼웠습니다.`,
-  ()=>`이렇게 쉬운 길이 있었다는 게 반가웠어요. 진작 알았으면 하는 생각이 들었습니다.`,
-  ()=>`설명이 담백해서 부담 없이 들었고, 중간에 고개가 끄덕여졌습니다.`
-];
+const SEE_QUESTION = (c)=>`오늘은 이 물음이 남았습니다. ${sent(c)}`;
 const FEEL_STUCK_RE = /(못했|못해|못하|안\s*됐|어려웠|어렵|막막|아쉬|답답|헷갈|미뤘|미루|걱정|두려|막혔|모르겠)/;
-const FEEL_GOOD_RE = /(놀랐|놀라|신기|반가|기뻤|좋았|편했|편하|가벼|시원|뿌듯|와닿|감동)/;
-const FEEL_GEN = [
-  ()=>`듣는 동안 그동안 미뤄 둔 일이 하나씩 떠올랐습니다. 혼자서는 계속 다음으로 미뤘을 일이에요.`,
-  ()=>`설명을 따라가다 보니 어렵게만 생각했던 일이 생각보다 단순한 절차라는 걸 알았어요.`,
-  ()=>`이번에는 다르게 해볼 수 있겠다는 마음이 들었습니다.`
-];
-const FEEL_MARK = [
-  ()=>`그 말이 오래 남은 건 제가 그 부분에서 계속 멈춰 있었기 때문이에요.`,
-  ()=>`듣고 나서야 그동안 왜 답답했는지 알겠다는 생각이 들었습니다.`,
-  ()=>`수업이 끝난 뒤에도 그 장면이 자꾸 떠올랐습니다.`
-];
-const FEEL_MARK_RE = /(인상|기억에\s*남|오래\s*남|남았|와닿|신선|흥미)/;
 const CHANGE_FRAMES = [
-  (c)=>`내일 아침에 가장 먼저 할 일은 이겁니다. ${c}`,
-  (c)=>`이번 주 안에 꼭 해볼 것은 이겁니다. ${c}`,
-  (c)=>`당장 내일 해볼 일을 하나 정했습니다. ${c}`,
-  (c)=>`돌아가서 가장 먼저 할 일은 이겁니다. ${c}`
-];
-const CHANGE_FRAMES_NO_TIME = [
-  (c)=>`돌아가서 가장 먼저 할 일은 이겁니다. ${c}`,
-  (c)=>`제가 적어 둔 실행 하나는 이겁니다. ${c}`,
-  (c)=>`작게라도 바로 해볼 일은 이겁니다. ${c}`
+  (c)=>`제가 적어 둔 실행 하나는 이겁니다. ${sent(c)}`,
+  (c)=>`작게라도 해볼 일은 이겁니다. ${sent(c)}`,
+  (c)=>`이번에 해볼 일은 이겁니다. ${sent(c)}`
 ];
 const REC_FRAMES = [
   ()=>`아직 안 들으셨다면 다음 회차는 꼭 들어보시길 권합니다. 준비 없이 들어와도 그날 안에 손에 잡히는 게 하나는 남습니다.`,
@@ -988,25 +1025,31 @@ const REC_FRAMES = [
   ()=>`따라 하는 시간이 따로 있어서 처음이어도 어렵지 않습니다. 관심만 있으시다면 한 번 들어보세요.`
 ];
 
+function seeText(c,h){
+  if(!c) return '';
+  if(isQuestion(c)) return SEE_QUESTION(c);
+  /* 이미 완결된 문장은 그대로 살립니다. 틀 문장을 붙이면 뜻이 늘어납니다. */
+  const fullSentence=/(요|다|음|함)[.!?]?$/.test(c);
+  if(fullSentence) return sent(c);
+  return SEE_FRAMES[pickIdx(h,0,SEE_FRAMES.length)](c);
+}
 function buildReview(lec, note){
   const raw=(note||'').trim();
   const h=hashStr(raw+'|'+lec.id);
   const p=parseNote(raw);
-  const see=dot(p.see || DEFAULT_SEE[lec.id] || '오늘 보여 주신 순서');
-  const feel=p.feel ? dot(polite(p.feel)) : '';
-  const change=dot(p.change ? polite(p.change) : (DEFAULT_CHANGE[lec.id] || '오늘 배운 것을 그대로 한 번 따라 해보려고 합니다.'));
-  const seeTxt=SEE_FRAMES[pickIdx(h,0,SEE_FRAMES.length)](see);
-  const feelTxt=feel ? FEEL_HAS[pickIdx(h,5,FEEL_HAS.length)](feel)
-    : (FEEL_STUCK_RE.test(raw) ? FEEL_STUCK[pickIdx(h,5,FEEL_STUCK.length)]()
-      : FEEL_GOOD_RE.test(raw) ? FEEL_GOOD[pickIdx(h,5,FEEL_GOOD.length)]()
-      : FEEL_MARK_RE.test(raw) ? FEEL_MARK[pickIdx(h,5,FEEL_MARK.length)]()
-      : FEEL_GEN[pickIdx(h,5,FEEL_GEN.length)]());
-  const changeFrames = /^(내일|이번|다음|당장|주말|오늘)/.test(change) ? CHANGE_FRAMES_NO_TIME : CHANGE_FRAMES;
-  const changeTxt=changeFrames[pickIdx(h,11,changeFrames.length)](change);
+  const seeHasNote=!!(p.see||'').trim();
+  const seeSrc=seeHasNote ? p.see : (DEFAULT_SEE[lec.id] || '오늘 보여 주신 순서');
+  const seeTxt=seeText(seeSrc,h);
+  const feelTxt=p.feel ? sent(polite(p.feel)) : '';
+  const changeHasNote=!!(p.change||'').trim();
+  const changeSrc=changeHasNote ? polite(p.change) : (DEFAULT_CHANGE[lec.id] || '오늘 배운 것을 그대로 한 번 따라 해보려고 합니다.');
+  const changeTxt=CHANGE_FRAMES[pickIdx(h,11,CHANGE_FRAMES.length)](changeSrc);
   const recTxt=REC_FRAMES[pickIdx(h,17,REC_FRAMES.length)]();
+  const body=[seeTxt, feelTxt].filter(Boolean).join(' ');
   return {
-    text:`${lectureLabel(lec)}\n\n${seeTxt} ${feelTxt}\n\n${changeTxt}\n\n${recTxt}`,
-    see:seeTxt, feel:feelTxt, change:changeTxt, rec:recTxt
+    text:`${lectureLabel(lec)}\n\n${body}\n\n${changeTxt}\n\n${recTxt}`,
+    see:seeTxt, feel:feelTxt, change:changeTxt, rec:recTxt,
+    defaultSee:!seeHasNote, defaultChange:!changeHasNote, noFeel:!feelTxt, hasNote:!!raw
   };
 }
 
@@ -1043,8 +1086,11 @@ function fmtTime(d){
   return h+':'+m;
 }
 function pastLectures(){ return Object.values(LECTURES).filter(l=>l.bucket==='past').sort((a,b)=>b.date.localeCompare(a.date)); }
+function pickableLectures(){
+  return Object.values(LECTURES).filter(l=>l.bucket==='past'||l.bucket==='today').sort((a,b)=>b.date.localeCompare(a.date));
+}
 function selLectures(){
-  return pastLectures().filter(l=>state.selected.includes(l.id));
+  return pickableLectures().filter(l=>state.selected.includes(l.id));
 }
 function appOf(id){ return state.apps.find(a=>a.lecture===id) || null; }
 function pendingApps(){ return state.apps.filter(a=>!a.sentAt); }
@@ -1100,10 +1146,10 @@ function rowHTML(l){
   if(l.paid) acts.push(`<a class="mute" href="${l.paid}" target="_blank" rel="noopener">유료 신청</a>`);
   const on=state.selected.includes(l.id);
   const tag=l.ebook
-    ? `<span class="tag ready">전자책 ${l.ebook.version}</span>`
+    ? (l.ebook.demo ? `<span class="tag demo">전자책 시연용</span>` : `<span class="tag ready">전자책 ${l.ebook.version}</span>`)
     : `<span class="tag">전자책 준비 중</span>`;
   return `<div class="row pick${on?' sel':''}" data-row="${l.id}">
-    <span class="pickbox"><input type="checkbox" id="pk-${l.id}" ${on?'checked':''} aria-label="${esc(l.title)} 선택"></span>
+    <label class="pickbox" for="pk-${l.id}"><input type="checkbox" id="pk-${l.id}" data-pick="${l.id}" ${on?'checked':''} aria-label="${esc(l.title)} 선택"></label>
     <div class="when"><b>${l.md}</b>${l.dow} · ${l.round||l.program}</div>
     <div class="what"><div class="prog">${l.program}</div><div class="title">${l.title}</div></div>
     <div class="tagcol">${tag}</div>
@@ -1128,16 +1174,43 @@ function renderLists(){
   const up=Object.values(LECTURES).filter(l=>l.bucket==='upcoming').sort((a,b)=>a.date.localeCompare(b.date));
   $('#listUpcoming').innerHTML = up.map(upcomingRowHTML).join('');
 
-  $$('#listPast input[type=checkbox]').forEach(cb=>{
-    cb.addEventListener('change',()=>{
-      const id=cb.id.slice(3);
-      if(cb.checked){ if(!state.selected.includes(id)) state.selected.push(id); }
-      else state.selected=state.selected.filter(x=>x!==id);
-      save(); syncPickbar();
-      const row=cb.closest('.row'); if(row) row.classList.toggle('sel', cb.checked);
-      updateCounts();
+  bindPickInputs();
+  bindRowTap();
+  syncPickUI();
+}
+function bindPickInputs(){
+  $$('[data-pick]').forEach(cb=>{
+    cb.addEventListener('change',()=>togglePick(cb.dataset.pick, cb.checked));
+  });
+}
+function bindRowTap(){
+  $$('.row.pick').forEach(row=>{
+    row.addEventListener('click',e=>{
+      if(e.target.closest('a,button,input,label')) return;
+      const id=row.dataset.row;
+      togglePick(id, !state.selected.includes(id));
     });
   });
+}
+function bindTodayTap(){
+  const today=$('.today');
+  if(!today || today.dataset.bound) return;
+  today.dataset.bound='1';
+  today.addEventListener('click',e=>{
+    if(e.target.closest('a,button,input,label')) return;
+    togglePick('20261118_수요12', !state.selected.includes('20261118_수요12'));
+  });
+}
+function togglePick(id,on){
+  if(on){ if(!state.selected.includes(id)) state.selected.push(id); }
+  else state.selected=state.selected.filter(x=>x!==id);
+  save(); syncPickbar(); syncPickUI();
+}
+function syncPickUI(){
+  $$('[data-pick]').forEach(cb=>{ cb.checked=state.selected.includes(cb.dataset.pick); });
+  $$('[data-row]').forEach(row=>row.classList.toggle('sel', state.selected.includes(row.dataset.row)));
+  const tc=$('.today'); if(tc) tc.classList.toggle('sel', state.selected.includes('20261118_수요12'));
+  updateCounts();
 }
 function syncPickbar(){
   const bar=$('#pickbar');
@@ -1149,7 +1222,7 @@ function syncPickbar(){
   updateCounts();
 }
 $('#clearPick').addEventListener('click',()=>{
-  state.selected=[]; save(); renderLists(); syncPickbar(); updateCounts();
+  state.selected=[]; save(); syncPickbar(); syncPickUI();
   toast('선택을 모두 해제했습니다.');
 });
 $('#goReview').addEventListener('click',()=>{
@@ -1160,19 +1233,43 @@ $('#goReview').addEventListener('click',()=>{
 /* =========================================================
    STEP 2 — 후기 (다중)
    ========================================================= */
+function keyPhrase(s,max,mode){
+  max=max||22;
+  let t=String(s||'').replace(/\s+/g,' ').trim();
+  t=t.replace(/^[“"'‘\s]+|[”"'’\s]+$/g,'');
+  if(mode==='last'){
+    const m=t.match(/^[^.?!。]{0,42}[.?!。]\s+(.+)$/); if(m) t=m[1];
+  }else{
+    const m=t.match(/^([^.?!。]{1,80}?)[.?!。](\s|$)/); if(m) t=m[1];
+  }
+  t=t.replace(/^(그리고|그래서|다만|특히|정말|진짜|아주|너무|오늘은|오늘)\s+/,'').trim();
+  t=t.replace(/[.!?。]+$/,'').trim();
+  if(t.length<=max) return t;
+  const cut=t.slice(0,max); const sp=cut.lastIndexOf(' ');
+  return (sp>8?cut.slice(0,sp):cut)+'…';
+}
 function sfsHTML(d){
   if(!d) return `<div class="sfs empty">
     <div class="cell"><span class="k">See</span><p>본 것</p></div>
     <div class="cell"><span class="k">Feel</span><p>느낀 것</p></div>
-    <div class="cell"><span class="k">Change</span><p>내일 할 일</p></div>
+    <div class="cell"><span class="k">Change</span><p>바로 해볼 것</p></div>
     <div class="cell"><span class="k">추천</span><p>한마디</p></div>
   </div>`;
   return `<div class="sfs">
-    <div class="cell"><span class="k">See</span><p>${esc(d.see)}</p></div>
-    <div class="cell"><span class="k">Feel</span><p>${esc(d.feel)}</p></div>
-    <div class="cell"><span class="k">Change</span><p>${esc(d.change)}</p></div>
-    <div class="cell"><span class="k">추천</span><p>${esc(d.rec)}</p></div>
+    <div class="cell" title="${esc(d.see)}"><span class="k">See</span><p>${esc(keyPhrase(d.see,22,'first'))}</p></div>
+    <div class="cell" title="${esc(d.feel||'')}"><span class="k">Feel</span><p${d.feel?'':' class="ph"'}>${d.feel?esc(keyPhrase(d.feel,22,'first')):'느낀 점을 한 줄 더하면 채워집니다'}</p></div>
+    <div class="cell" title="${esc(d.change)}"><span class="k">Change</span><p>${esc(keyPhrase(d.change,22,'last'))}</p></div>
+    <div class="cell" title="${esc(d.rec)}"><span class="k">추천</span><p>${esc(keyPhrase(d.rec,24,'first'))}</p></div>
   </div>`;
+}
+function sfsBoxHTML(d){
+  const hints=[];
+  if(d){
+    if(d.defaultSee||d.defaultChange) hints.push('<p class="sfsnote warn">소감에 없던 칸은 기본 문장으로 채웠습니다. 참여자 말로 고쳐 주세요.</p>');
+    if(d.noFeel) hints.push('<p class="sfsnote">Feel 칸은 비워 두었습니다. 느낀 점을 한 줄 더하면 채워집니다.</p>');
+  }
+  const cap = d ? '<p class="sfsnote">칸에는 핵심만 요약했습니다. 전문은 위 초안에 있습니다.</p>' : '<p class="sfsnote">칸에는 핵심만 요약해 보여 줍니다. 전문은 위 초안에 있습니다.</p>';
+  return `<div class="sfsbox">${sfsHTML(d)}${cap}${hints.join('')}</div>`;
 }
 function reviewCardHTML(l){
   const notes=EXAMPLE_NOTES[l.id]||[];
@@ -1180,14 +1277,14 @@ function reviewCardHTML(l){
   const draft=state.drafts[l.id]||'';
   const done=!!state.reviewed[l.id];
   const chips=notes.map((n,i)=>`<button class="chip" type="button" data-ex="${l.id}:${i}"><b>관점 ${i+1}</b>${esc(n.length>34?n.slice(0,34)+'…':n)}</button>`).join('');
-  const sfs = (draft && note.trim()) ? sfsHTML(buildReview(l, note)) : sfsHTML(null);
+  const sfs = sfsBoxHTML((draft && note.trim()) ? buildReview(l, note) : null);
   return `<article class="revcard" data-card="${l.id}">
     <div class="rvhead">
       <div>
         <div class="when">${l.md} ${l.dow} · ${l.program} ${l.round||''}</div>
         <h3>${esc(l.title)}</h3>
       </div>
-      ${l.ebook?`<span class="tag ready">전자책 ${l.ebook.version}</span>`:`<span class="tag">전자책 준비 중</span>`}
+      ${l.ebook?(l.ebook.demo?`<span class="tag demo">전자책 시연용</span>`:`<span class="tag ready">전자책 ${l.ebook.version}</span>`):`<span class="tag">전자책 준비 중</span>`}
     </div>
 
     <div class="nlabel"><label for="note-${l.id}">내 짧은 소감</label><span class="hint">본 것 · 느낀 것 · 바로 써볼 것</span></div>
@@ -1258,8 +1355,8 @@ function bindReviewEvents(){
       const id=ta.dataset.draftta;
       state.drafts[id]=ta.value; save(); autosize(ta);
       const c=$(`[data-cnt="${id}"]`); if(c) c.textContent=ta.value.length.toLocaleString('ko-KR')+'자';
-      const card=ta.closest('.revcard'); const sfs=card&&card.querySelector('.sfs');
-      if(sfs && state.notes[id]) sfs.outerHTML=sfsHTML(buildReview(LECTURES[id], state.notes[id]));
+      const card=ta.closest('.revcard'); const box=card&&card.querySelector('.sfsbox');
+      if(box && state.notes[id]) box.outerHTML=sfsBoxHTML(buildReview(LECTURES[id], state.notes[id]));
     });
   });
   $$('[data-draft]').forEach(b=>b.addEventListener('click',()=>makeDraft(b.dataset.draft,false)));
@@ -1297,8 +1394,8 @@ function makeDraft(id, quiet){
   state.drafts[id]=d.text; save();
   const ta=$(`#draft-${id}`); if(ta){ ta.value=d.text; autosize(ta); }
   const c=$(`[data-cnt="${id}"]`); if(c) c.textContent=d.text.length.toLocaleString('ko-KR')+'자';
-  const card=$(`[data-card="${id}"]`); const sfs=card&&card.querySelector('.sfs');
-  if(sfs) sfs.outerHTML=sfsHTML(d);
+  const card=$(`[data-card="${id}"]`); const box=card&&card.querySelector('.sfsbox');
+  if(box) box.outerHTML=sfsBoxHTML(d);
   if(!quiet) toast('소감을 살려 초안을 썼습니다. See · Feel · Change 순서로 확인해 보세요.');
   return true;
 }
@@ -1370,7 +1467,7 @@ function renderApply(){
     const a=appOf(l.id);
     return `<div class="approw">
       <div class="t">${l.md} ${l.program} ${l.round||''} — ${esc(l.title)}
-        <div class="m">${l.ebook?`전자책 ${l.ebook.name} · ${l.ebook.version}`:'전자책 준비 중 — 등록 후 승인 가능'}</div></div>
+        <div class="m">${l.ebook?(l.ebook.demo?'전자책 시연용 · 실제 전자책은 라이브 후 발행':`전자책 ${l.ebook.name} · ${l.ebook.version}`):'전자책 준비 중 — 등록 후 승인 가능'}</div></div>
       <div class="tagcol">${appStatusTag(a)}</div>
     </div>`;
   }).join('');
@@ -1417,7 +1514,8 @@ function mailSubject(l){
   return `[구글과 AI로 만드는 나의 디지털 사무실] ${d} ${label} 후기 감사 선물 전달`;
 }
 function mailBody(l,a){
-  return `안녕하세요, ${a.name} 님.\n\n「구글과 AI로 만드는 나의 디지털 사무실」 ${l.date.replace(/-/g,'')} ${l.title}에 참여해 주셔서 감사합니다.\n\n약속드린 대로 현재 유료로 판매 중인 전자책을 전달드립니다.\n\n<자료 안내>\n도서명: ${l.ebook.name}\n책 링크: ${l.ebook.free}\n\n본 전자책은 유료 판매 자료이므로 외부 공유는 삼가 부탁드립니다.\n\n전자책을 보시면서 강의에서 다룬 내용을 한 번 더 본인 업무에 맞게 고쳐 보시길 바랍니다.\n\n감사합니다.\n류지연 드림`;
+  const demo=!!(l.ebook&&l.ebook.demo);
+  return `안녕하세요, ${a.name} 님.\n\n「구글과 AI로 만드는 나의 디지털 사무실」 ${l.date.replace(/-/g,'')} ${l.title}에 참여해 주셔서 감사합니다.\n\n약속드린 대로 현재 유료로 판매 중인 전자책을 전달드립니다.\n\n<자료 안내>\n도서명: ${l.ebook.name}\n책 링크: ${l.ebook.free}\n${demo?'※ 시연용 링크입니다. 실제 전자책은 라이브 후 2~3일 안에 발행되어 이 자리로 대체됩니다.\n':''}\n본 전자책은 유료 판매 자료이므로 외부 공유는 삼가 부탁드립니다.\n\n전자책을 보시면서 강의에서 다룬 내용을 한 번 더 본인 업무에 맞게 고쳐 보시길 바랍니다.\n\n감사합니다.\n류지연 드림`;
 }
 let mailSel=null;
 function renderMail(){
@@ -1430,22 +1528,8 @@ function renderMail(){
     return;
   }
   const sent=ls.filter(l=>appOf(l.id).sentAt);
-  if(!sent.length){
-    area.innerHTML=`<div class="empty"><strong>승인을 기다리고 있습니다</strong>류지연 님이 승인하면 ${ls.length}개 강의의 전자책 링크가 ${esc(ls[0].id&&appOf(ls[0].id).mail)} 로 발송됩니다. 보통 라이브 종료 후 2~3일 안에 도착합니다.</div>
-      <ul class="tl" style="margin-top:22px">
-        <li class="on">신청 접수<span>${appOf(ls[0].id).at}</span></li>
-        <li>승인<span>대기 중</span></li>
-        <li>발송<span>—</span></li>
-      </ul>`;
-    return;
-  }
-  if(!mailSel || !ls.some(l=>l.id===mailSel)) mailSel=sent[0].id;
-  const curL=LECTURES[mailSel], curA=appOf(mailSel);
-  if(!curA.sentAt){
-    const firstSent=sent[0].id; mailSel=firstSent;
-  }
+  if(!mailSel || !ls.some(l=>l.id===mailSel)) mailSel=(sent[0]||ls[0]).id;
   const cl=LECTURES[mailSel], ca=appOf(mailSel);
-  const unreadCount=sent.filter(l=>!state.read[l.id]).length;
 
   area.innerHTML=`<div class="btn-row" style="margin-bottom:12px">
       <span class="note" style="margin:0">받은 메일 ${sent.length}건 · 승인 대기 ${ls.length-sent.length}건</span>
@@ -1459,10 +1543,10 @@ function renderMail(){
           const a=appOf(l.id);
           const on=l.id===mailSel;
           const cls=['mailitem', on?'on':'', !a.sentAt?'pending':'', (a.sentAt&&!state.read[l.id])?'unread':''].filter(Boolean).join(' ');
-          return `<button class="${cls}" type="button" data-mail="${l.id}">
+          return `<button class="${cls}" type="button" data-mail="${l.id}" aria-current="${on?'true':'false'}">
             <div class="from">류지연 &lt;${ADMIN_MAIL}&gt;</div>
-            <div class="subj">${a.sentAt?esc(mailSubject(l)):'승인 대기 중 — '+esc(l.title)}</div>
-            <div class="time">${a.sentAt?a.sentAt+' · '+l.md+' '+l.program:'접수 '+a.at}</div>
+            <div class="subj">${a.sentAt?esc(mailSubject(l)):'승인 대기 — '+esc(l.title)}</div>
+            <div class="time">${a.sentAt?a.sentAt+' · '+l.md+' '+l.program:'접수 '+a.at+' · 아직 승인 전'}</div>
           </button>`;
         }).join('')}
       </div>
@@ -1471,19 +1555,29 @@ function renderMail(){
           <div class="mh">보낸사람 ${ADMIN_MAIL}<b>${esc(mailSubject(cl))}</b></div>
           <p class="mailbody">${esc(mailBody(cl,ca))}</p>
           <div class="dl">
-            <div class="name">${esc(cl.ebook?cl.ebook.name:curL.title)}<small>전자책 ${cl.ebook?cl.ebook.version:'—'} · 큐리어스 무료 배포 상품</small></div>
+            <div class="name">${esc(cl.ebook?cl.ebook.name:cl.title)}<small>${cl.ebook?(cl.ebook.demo?'전자책 시연용 링크 · 실제 전자책은 라이브 후 발행':'전자책 '+cl.ebook.version+' · 큐리어스 무료 배포 상품'):'전자책 준비 중'}</small></div>
             <a class="btn btn-primary" href="${cl.ebook?cl.ebook.free:'#'}" target="_blank" rel="noopener">전자책 열기</a>
           </div>
-          <p class="note">유료 판매 자료입니다. 링크를 외부에 공유하지 마세요. 참여자의 피클이 이 링크를 열어 저장하고, 확인이 끝나면 아래 버튼을 눌러 기록합니다.</p>
+          <p class="note">${cl.ebook&&cl.ebook.demo?'시연용 링크입니다. 실제 운영에서는 발행된 전자책 링크가 이 자리에 들어갑니다.':'유료 판매 자료입니다. 링크를 외부에 공유하지 마세요.'} 참여자의 피클이 이 링크를 열어 저장하고, 확인이 끝나면 아래 버튼을 눌러 기록합니다.</p>
           <div class="btn-row" style="margin-top:14px">
             <button class="btn btn-ghost" type="button" id="confirmDl" ${ca.downloadedAt?'disabled':''}>${ca.downloadedAt?'다운로드 확인 완료 · '+ca.downloadedAt:'다운로드 확인'}</button>
             <div class="spacer"></div>
             <button class="btn btn-quiet" type="button" data-goto="1">강의 목록으로</button>
           </div>`
-        :`<div class="empty" style="border:0;padding:0;background:none">
-            <strong>승인을 기다리고 있습니다</strong>${esc(cl.md)} ${esc(cl.title)} — 류지연 님이 승인하면 이 메일이 도착합니다.
+        :`<div class="status">
+            <div class="idline"><span>${appStatusTag(ca)}</span><span class="id">${esc(ca.id)}</span></div>
+            <p class="plead">${esc(cl.md)} ${esc(cl.program)} ${esc(cl.round||'')} — ${esc(cl.title)}<br>${ca.at} 접수 · 아직 류지연 님이 승인하지 않았습니다. 승인하면 이 자리에 메일이 도착합니다.</p>
+            <ul class="tl">
+              <li class="on">신청 접수<span>${ca.at}</span></li>
+              <li>승인<span>대기 중</span></li>
+              <li>발송<span>—</span></li>
+            </ul>
           </div>
-          <div class="btn-row" style="margin-top:16px"><button class="btn btn-quiet" type="button" id="peekAdmin2">관리자 승인 화면 보기</button></div>`}
+          <div class="btn-row" style="margin-top:16px">
+            <button class="btn btn-ghost" type="button" id="peekAdmin2">관리자 승인 화면 보기</button>
+            <div class="spacer"></div>
+            <button class="btn btn-quiet" type="button" data-goto="1">강의 목록으로</button>
+          </div>`}
       </div>
     </div>`;
 
@@ -1513,6 +1607,7 @@ function renderMail(){
    ADMIN — 다중 승인
    ========================================================= */
 let adminSel=[];
+let adminOpen=new Set();
 function updateBadge(){
   const n=pendingApps().length;
   const b=$('#adminBadge'); b.textContent=n; b.classList.toggle('on', n>0);
@@ -1521,16 +1616,18 @@ function renderAdmin(){
   const pend=pendingApps();
   adminSel=adminSel.filter(id=>pend.some(a=>a.id===id));
   $('#adminAlarm').innerHTML = pend.length
-    ? `<div class="alarm"><span class="pulse"></span><p><b>피클 알람 — 새 전자책 신청 ${pend.length}건</b><br>${pend[0].at} 접수 · ${esc(pend[0].nick)}(${esc(pend[0].name)}) 외 ${pend.length-1}건 · 후기 등록 확인 · 대조 결과 정상. 승인만 남았습니다.</p></div>`
+    ? `<div class="alarm"><span class="pulse"></span><p><b>피클 알람 — 새 전자책 신청 ${pend.length}건</b><br>${pend[0].at} 접수 · ${esc(pend[0].nick)}(${esc(pend[0].name)})${pend.length>1?` 외 ${pend.length-1}건`:''} · 후기 등록 확인 · 대조 결과 정상. 승인만 남았습니다.</p></div>`
     : '';
 
+  const canSel = pend.filter(a=>adminSel.includes(a.id) && LECTURES[a.lecture] && LECTURES[a.lecture].ebook).length;
+  const blockedSel = adminSel.length - canSel;
   $('#queueToolbar').innerHTML = pend.length ? `
     <div class="qbar">
       <label class="selall"><input type="checkbox" id="selAll" ${adminSel.length===pend.length?'checked':''}> 전체 선택</label>
-      <span class="cnt">${adminSel.length}건 선택</span>
+      <span class="cnt">${adminSel.length}건 선택${blockedSel?` · 발송 가능 ${canSel}건`:''}</span>
       <div class="spacer"></div>
-      <button class="btn btn-primary" type="button" id="approveSel" ${adminSel.length?'':'disabled'}>선택한 ${adminSel.length}건 승인 및 발송</button>
-    </div>` : '';
+      <button class="btn btn-primary" type="button" id="approveSel" ${canSel?'':'disabled'}>선택한 ${canSel}건 승인 및 발송</button>
+    </div>${blockedSel?`<p class="note">전자책이 아직 등록되지 않은 ${blockedSel}건은 발송하지 않고 대기로 남깁니다.</p>`:''}` : '';
 
   $('#queue').innerHTML = pend.length ? pend.map(a=>{
     const l=LECTURES[a.lecture];
@@ -1543,12 +1640,12 @@ function renderAdmin(){
           <div class="who">${esc(a.name)}<span>${esc(a.nick)}</span></div>
           <div class="sub">${a.id} · ${a.at} · ${esc(l.md)} ${esc(l.program)} ${esc(l.round||'')} · ${esc(a.type)}</div>
         </div>
-        <div class="state"><span class="tag">승인 대기</span><span class="chev">▾</span></div>
+        <div class="state"><span class="tag wait">승인 대기</span><span class="chev">▾</span></div>
       </div>
       <div class="detail"><div class="detail-in">
         <dl class="kv">
           <dt>강의</dt><dd>${esc(l.md)} ${esc(l.program)} ${esc(l.round||'')} — ${esc(l.title)}</dd>
-          <dt>전자책</dt><dd>${l.ebook?`${esc(l.ebook.name)} · ${esc(l.ebook.version)} · 무료 상품 ${l.ebook.free.split('/').pop()}`:'이 회차 전자책은 아직 등록 전입니다'}</dd>
+          <dt>전자책</dt><dd>${l.ebook?(l.ebook.demo?`${esc(l.ebook.name)} · 시연용 (실제 전자책은 라이브 후 발행)`:`${esc(l.ebook.name)} · ${esc(l.ebook.version)} · 무료 상품 ${l.ebook.free.split('/').pop()}`):'이 회차 전자책은 아직 등록 전입니다'}</dd>
           <dt>Gmail</dt><dd>${esc(a.mail)}</dd>
           <dt>후기 등록</dt><dd>${a.reviewed==='yes'?'네, 등록했습니다':'아직 등록하지 않았습니다'}</dd>
           <dt>대조 결과</dt><dd>이메일 정확 일치 · 중복 신청 없음 · 개인정보 동의 확인</dd>
@@ -1574,12 +1671,18 @@ function renderAdmin(){
 
   if(pend.length){
     $$('[data-q]').forEach(row=>{
+      const qid=row.dataset.q;
+      if(adminOpen.has(qid)) row.classList.add('open');
       row.querySelector('.top').addEventListener('click',e=>{
         if(e.target.closest('input')) return;
-        row.classList.toggle('open');
+        if(row.classList.toggle('open')) adminOpen.add(qid); else adminOpen.delete(qid);
       });
     });
-    const firstQ=$('#queue .qrow'); if(firstQ) firstQ.classList.add('open');
+    const openIds=pend.map(a=>a.id);
+    Array.from(adminOpen).forEach(id=>{ if(!openIds.includes(id)) adminOpen.delete(id); });
+    if(!Array.from(adminOpen).some(id=>openIds.includes(id))){
+      const firstQ=$('#queue .qrow'); if(firstQ){ firstQ.classList.add('open'); adminOpen.add(firstQ.dataset.q); }
+    }
     $$('[data-qsel]').forEach(cb=>{
       cb.addEventListener('click',e=>e.stopPropagation());
       cb.addEventListener('change',()=>{
@@ -1616,18 +1719,18 @@ function renderAdmin(){
 }
 function approveMany(ids){
   const at=fmtTime(new Date());
-  let n=0;
+  let n=0, blocked=0;
   ids.forEach(id=>{
     const a=state.apps.find(x=>x.id===id);
     if(!a || a.sentAt) return;
     const l=LECTURES[a.lecture];
-    if(!l || !l.ebook) return;
+    if(!l || !l.ebook){ blocked++; return; }
     a.sentAt=at; n++;
   });
   adminSel=[];
   save(); renderAdmin(); renderApply(); renderMail(); updateBadge(); updateCounts();
-  if(n) toast(`${n}건을 승인했습니다. 강의별로 지메일에 전자책 링크를 발송했습니다.`);
-  else toast('발송할 수 있는 건이 없습니다. 전자책 등록 여부를 확인해 주세요.');
+  if(n) toast(blocked? `${n}건을 승인했습니다. ${blocked}건은 전자책이 등록되지 않아 대기로 남겼습니다.` : `${n}건을 승인했습니다. 강의별로 지메일에 전자책 링크를 발송했습니다.`);
+  else toast(blocked? `전자책이 등록되지 않은 ${blocked}건은 발송할 수 없습니다. 대기로 남겼습니다.` : '발송할 수 있는 건이 없습니다.');
 }
 
 /* =========================================================
@@ -1635,7 +1738,7 @@ function approveMany(ids){
    ========================================================= */
 $('#resetBtn').addEventListener('click',()=>{
   state={view:'member',step:1,selected:[],notes:{},drafts:{},reviewed:{},apps:[],read:{}};
-  mailSel=null; adminSel=[];
+  mailSel=null; adminSel=[]; adminOpen=new Set();
   try{ localStorage.removeItem(STORE_KEY); }catch(e){}
   $('#applyForm').reset(); $('#fName').value='김서연'; $('#fNick').value='서연의 작업실'; $('#fMail').value='seoyeon.demo@gmail.com'; $('#fConsent').checked=true;
   renderLists(); syncPickbar(); renderReviews(); renderApply(); renderAdmin(); updateBadge(); updateCounts();
@@ -1644,6 +1747,7 @@ $('#resetBtn').addEventListener('click',()=>{
 });
 
 renderLists();
+bindTodayTap();
 syncPickbar();
 updateCounts();
 renderAdmin();
