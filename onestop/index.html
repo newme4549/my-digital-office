@@ -1170,7 +1170,12 @@ function setView(v){
   $('#view-admin').classList.toggle('hidden', v!=='admin');
   $$('.switch button').forEach(b=>b.setAttribute('aria-selected', String(b.dataset.view===v)));
   window.scrollTo({top:0,behavior:'instant'});
-  if(v==='admin') renderAdmin();
+  if(v==='admin'){ renderAdmin(); }
+  else {
+    renderLists(); updateCounts();
+    if(state.step===3) renderApply();
+    if(state.step===4) renderMail();
+  }
 }
 $$('.switch button').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));
 
