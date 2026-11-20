@@ -446,7 +446,7 @@ section[id]{scroll-margin-top:84px}
           </div>
         </div>
         <div>
-          <p class="fine" style="margin-top:0">『1년의 미라클』은 22년간 의류회사 해외영업팀에서 일한 뒤, 회사를 나와 1년 동안 자신의 브랜드를 찾은 기록입니다. 책의 프로젝트를 강의로 옮긴 자리에서는 참석자가 각자 자기 책의 한 페이지를 그날 완성해 갑니다.</p>
+          <p class="fine" style="margin-top:0" id="talk-bio">『1년의 미라클』은 22년간 의류회사 해외영업팀에서 일한 뒤, 회사를 나와 1년 동안 자신의 브랜드를 찾은 기록입니다. 책의 프로젝트를 강의로 옮긴 자리에서는 참석자가 각자 자기 책의 한 페이지를 그날 완성해 갑니다.</p>
         </div>
       </div>
     </div>
@@ -858,6 +858,8 @@ section[id]{scroll-margin-top:84px}
     if ((S.contact || "").trim()) { cl.setAttribute("href", S.contact.trim()); cl.style.display = ""; }
     else { cl.removeAttribute("href"); cl.style.display = "none"; }
     toggle(["#gift", "#nav-gift"], !!(S.form || "").trim());
+    /* the talk section's author bio belongs to this studio's own page */
+    toggle(["#talk-bio"], (S.author || "").trim() === DEMO.author);
 
     var acts = $(".hero .acts");
     if (acts) acts.style.display = (shownStores > 0 || id || hasQuotes) ? "" : "none";
