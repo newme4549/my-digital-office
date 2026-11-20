@@ -266,7 +266,7 @@ section[id]{scroll-margin-top:84px}
 
 <header class="top">
   <div class="wrap top-in">
-    <div class="logo">류지연의 출간 작업실<small>북허브</small></div>
+    <div class="logo"><span id="logo-name">류지연의 출간 작업실</span><small>북허브</small></div>
     <nav aria-label="책 페이지 목차">
       <a id="nav-buy" href="#buy">구매</a>
       <a id="nav-trailer" href="#trailer">영상과 문장</a>
@@ -309,7 +309,7 @@ section[id]{scroll-margin-top:84px}
         <div class="cover">
           <img id="cover-img" src="cover-1nyeon-miracle.jpg" alt="1년의 미라클 표지" width="500" height="754">
           <div class="typo" aria-hidden="true">
-            <span class="t-author">류지연</span>
+            <span class="t-author" data-t="author" data-ph="저자명">류지연</span>
             <span class="t-mid">
               <span class="t-title" data-t="title" data-ph="내 책 제목">1년의 미라클</span>
               <span class="t-rule"></span>
@@ -459,7 +459,7 @@ section[id]{scroll-margin-top:84px}
   <div class="wrap">
     <div class="foot-in">
       <div>
-        <h2>류지연의 출간 작업실</h2>
+        <h2 id="foot-name">류지연의 출간 작업실</h2>
         <p>책 한 권이 독자에게 닿기까지 필요한 것을 한곳에 모읍니다. 책 페이지와 표지, 북트레일러, 독자 선물, 서점 구매 동선까지 직접 만들고 함께 만듭니다.</p>
         <div class="links">
           <a href="https://newme4549.github.io/my-digital-office/" target="_blank" rel="noopener">소개 페이지</a>
@@ -473,7 +473,7 @@ section[id]{scroll-margin-top:84px}
       </div>
     </div>
     <div class="bot">
-      <span>© 2026 류지연 · 책 페이지 템플릿</span>
+      <span id="copyright">© 2026 류지연 · 책 페이지 템플릿</span>
       <span>문의는 오픈채팅으로 받습니다</span>
       <button class="mini" data-editor data-open>이 페이지를 내 책으로 바꾸기</button>
     </div>
@@ -863,6 +863,11 @@ section[id]{scroll-margin-top:84px}
     if (acts) acts.style.display = (shownStores > 0 || id || hasQuotes) ? "" : "none";
 
     /* document title */
+    var author = (S.author || "").trim();
+    var studio = (author ? author + "의" : "나의") + " 출간 작업실";
+    var logoName = $("#logo-name"); if (logoName) logoName.textContent = studio;
+    var footName = $("#foot-name"); if (footName) footName.textContent = studio;
+    var copyEl = $("#copyright"); if (copyEl) copyEl.textContent = "© 2026 " + (author || "나") + " · 책 페이지 템플릿";
     document.title = (S.title || "내 책") + " — " + ((S.author || "").trim() ? S.author.trim() + "의 책 페이지" : "책 페이지");
     var md = document.querySelector('meta[name="description"]');
     if (md) md.setAttribute("content", (S.lead || "").slice(0, 150));
