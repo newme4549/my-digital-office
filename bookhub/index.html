@@ -98,15 +98,15 @@ section[id]{scroll-margin-top:84px}
 .book .cover img{width:100%;height:100%;object-fit:cover}
 .book .cover::after{content:"";position:absolute;left:0;top:0;bottom:0;width:10px;background:rgba(24,22,19,.13)}
 .book .cover::before{content:"";position:absolute;left:10px;top:0;bottom:0;width:1px;background:rgba(255,255,255,.35);z-index:2}
-.book .typo{display:none;position:absolute;inset:0;padding:26px 22px 22px;border:1px solid var(--line-2);background:var(--paper-2);flex-direction:column;justify-content:space-between;text-align:center}
+.book .typo{display:none;position:absolute;inset:0;padding:30px 24px 26px;border:1px solid var(--line-2);background:var(--paper-2);flex-direction:column;justify-content:space-between;text-align:center}
 .book.no-img .typo{display:flex}
 .book.no-img .cover img{display:none}
-.typo .t-author{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+.typo .t-author{font-size:11px;letter-spacing:.26em;color:var(--muted)}
 .typo .t-mid{display:block}
-.typo .t-title{display:block;font-family:var(--serif);font-size:clamp(22px,2.4vw,30px);font-weight:600;line-height:1.3;letter-spacing:-0.03em;color:var(--ink)}
-.typo .t-rule{display:block;width:34px;height:1px;background:var(--line-2);margin:14px auto}
-.typo .t-sub{font-size:11.5px;line-height:1.6;color:var(--ink-2);display:block}
-.typo .t-pub{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.typo .t-title{display:block;font-family:var(--serif);font-size:clamp(25px,2.7vw,32px);font-weight:600;line-height:1.3;letter-spacing:-0.03em;color:var(--ink);max-width:9em;margin:0 auto}
+.typo .t-rule{display:block;width:26px;height:1px;background:var(--accent-2);opacity:.55;margin:18px auto}
+.typo .t-sub{font-size:11px;line-height:1.8;color:var(--ink-2);display:block;max-width:15em;margin:0 auto;letter-spacing:0}
+.typo .t-pub{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
 .book figcaption{margin-top:14px;font-size:11.5px;letter-spacing:.05em;color:var(--muted);display:flex;gap:6px;align-items:baseline}
 .book figcaption b{font-weight:600;color:var(--ink-2)}
 .book .facts{margin:22px 0 0;border-top:1px solid var(--line);padding-top:14px;font-size:12.5px;color:var(--muted);line-height:1.9}
@@ -276,7 +276,7 @@ section[id]{scroll-margin-top:84px}
 <section class="hero">
   <div class="wrap hero-in">
     <div>
-      <p class="kicker">저서 · 책 페이지</p>
+      <p class="kicker">저서 · 단행본</p>
       <h1 data-t="title" data-ph="내 책 제목">1년의 미라클</h1>
       <p class="sub" data-t="sub" data-ph="부제를 넣어 주세요">나를 찾는 1년, 일하고픈 엄마의 삶을 바꾼 어썸인생 프로젝트</p>
       <p class="byline">
@@ -305,7 +305,7 @@ section[id]{scroll-margin-top:84px}
               <span class="t-rule"></span>
               <span class="t-sub" data-t="sub" data-ph="부제">나를 찾는 1년, 일하고픈 엄마의 삶을 바꾼 어썸인생 프로젝트</span>
             </span>
-            <span class="t-pub">Book Hub</span>
+            <span class="t-pub" data-t="pubshort" data-ph="출판사">반니</span>
           </div>
         </div>
       </div>
@@ -364,8 +364,8 @@ section[id]{scroll-margin-top:84px}
   <div class="wrap sec-in">
     <div class="sec-label"><b>02</b>영상과 문장</div>
     <div>
-      <h2 id="tr-h">1년을 44초로, 그리고 한 문장</h2>
-      <p class="dek">책의 흐름을 44초로 줄인 홍보 영상과, 오래 남는 문장 셋입니다.</p>
+      <h2 id="tr-h">영상 한 편, 문장 셋</h2>
+      <p class="dek">책을 소개하는 44초 홍보 영상과, 책에서 오래 남는 문장 셋입니다.</p>
 
       <div class="video" id="video">
         <div class="frame">
@@ -517,7 +517,7 @@ section[id]{scroll-margin-top:84px}
             <option value="">숨김</option>
           </select>
         </label>
-        <label class="fld"><span>한 줄 메모</span><input id="in-note-kyobo" type="text" autocomplete="off"></label>
+        <label class="fld"><span>교보 메모</span><input id="in-note-kyobo" type="text" autocomplete="off"></label>
       </div>
 
       <label class="fld"><span>예스24 주소</span><input id="in-yes24" type="text" autocomplete="off"></label>
@@ -531,7 +531,7 @@ section[id]{scroll-margin-top:84px}
             <option value="">숨김</option>
           </select>
         </label>
-        <label class="fld"><span>한 줄 메모</span><input id="in-note-yes24" type="text" autocomplete="off"></label>
+        <label class="fld"><span>예스24 메모</span><input id="in-note-yes24" type="text" autocomplete="off"></label>
       </div>
 
       <label class="fld"><span>알라딘 주소</span><input id="in-aladin" type="text" autocomplete="off"></label>
@@ -545,7 +545,7 @@ section[id]{scroll-margin-top:84px}
             <option value="">숨김</option>
           </select>
         </label>
-        <label class="fld"><span>한 줄 메모</span><input id="in-note-aladin" type="text" autocomplete="off"></label>
+        <label class="fld"><span>알라딘 메모</span><input id="in-note-aladin" type="text" autocomplete="off"></label>
       </div>
 
       <label class="fld"><span>주력 서점 (강조 배지)</span>
@@ -556,12 +556,12 @@ section[id]{scroll-margin-top:84px}
           <option value="">강조하지 않음</option>
         </select>
       </label>
+      <label class="fld"><span>구매 안내 문구</span><input id="in-fine" type="text" autocomplete="off"></label>
     </div>
 
     <div class="grp">
       <h3>영상과 문장</h3>
       <label class="fld"><span>유튜브 주소 (쇼츠·영상 모두)</span><input id="in-yt" type="text" autocomplete="off"></label>
-      <label class="fld"><span>구매 안내 문구</span><input id="in-fine" type="text" autocomplete="off"></label>
       <label class="fld"><span>책 속 문장 (한 줄에 하나, 최대 3개)</span><textarea id="in-quotes" rows="4"></textarea></label>
     </div>
 
