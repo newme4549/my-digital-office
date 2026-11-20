@@ -614,8 +614,10 @@ body.panel-open{overflow:hidden}
       show(a, true);
       shownLinks++;
       a.setAttribute("href", toHref(url));
-      $('[data-t="l' + i + 'label"]').textContent = txt(S["l" + i + "label"]) || hostOf(url);
+      var lab = txt(S["l" + i + "label"]);
+      $('[data-t="l' + i + 'label"]').textContent = lab || hostOf(url);
       $('[data-t="l' + i + 'host"]').textContent = hostOf(url);
+      show($('[data-t="l' + i + 'host"]'), !!lab);
     });
     show($("#channels"), shownLinks > 0);
     var chanList = $("#chan-list");
