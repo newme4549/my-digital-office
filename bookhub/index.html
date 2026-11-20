@@ -838,6 +838,17 @@ section[id]{scroll-margin-top:84px}
     var ct = clone.querySelector("title"); if (ct) ct.textContent = (S.title || "내 책") + " — 책 페이지";
     var cmd = clone.querySelector('meta[name="description"]');
     if (cmd) cmd.setAttribute("content", (S.lead || "").slice(0, 150));
+    var ogt = clone.querySelector('meta[property="og:title"]');
+    if (ogt) ogt.setAttribute("content", (S.title || "내 책") + " — 책 페이지");
+    var ogd = clone.querySelector('meta[property="og:description"]');
+    if (ogd) ogd.setAttribute("content", (S.lead || "").slice(0, 150));
+    var ogu = clone.querySelector('meta[property="og:url"]');
+    if (ogu && ogu.parentNode) ogu.parentNode.removeChild(ogu);
+    var ogi = clone.querySelector('meta[property="og:image"]');
+    if (ogi) {
+      if (/^https?:/i.test(S.cover || "")) ogi.setAttribute("content", S.cover);
+      else if (ogi.parentNode) ogi.parentNode.removeChild(ogi);
+    }
 
     var img = clone.querySelector("#cover-img");
     var src = img ? img.getAttribute("src") : "";
