@@ -110,6 +110,8 @@ body.panel-open{overflow:hidden}
 .fname{margin:0;font-size:13.5px;color:var(--ink-2)}
 .fname b{font-family:var(--serif);font-size:15px;font-weight:600;color:var(--ink);margin-right:8px}
 .fnote{margin:0;font-size:11.5px;line-height:1.8;color:var(--muted);border-left:2px solid var(--line-2);padding-left:13px;max-width:44em}
+.empty-hint{display:none;margin:0 0 20px;font-size:13px;line-height:1.75;color:var(--muted);border:1px dashed var(--line-2);padding:12px 14px;border-radius:2px;max-width:26em}
+.empty-hint b{color:var(--ink-2)}
 .fbot{margin:2px 0 0;font-size:11px;color:var(--muted);letter-spacing:.05em}
 
 /* ── panel ───────────────────────────────── */
@@ -135,7 +137,7 @@ body.panel-open{overflow:hidden}
 .fld:last-child{margin-bottom:0}
 .fld > span{display:block;font-size:11.5px;color:var(--muted);margin-bottom:5px;letter-spacing:.02em}
 .fld input,.fld textarea{width:100%;border:1px solid var(--line-2);background:#fff;border-radius:2px;padding:9px 11px;font:inherit;font-size:13.5px;color:var(--ink);line-height:1.5}
-.fld textarea{resize:vertical;min-height:58px}
+.fld textarea{resize:vertical;min-height:70px}
 .fld input:focus,.fld textarea:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:transparent}
 .row2{display:grid;grid-template-columns:118px 1fr;gap:8px}
 .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
@@ -206,6 +208,7 @@ body.panel-open{overflow:hidden}
 <section class="hero" aria-labelledby="name">
   <div class="wrap hero-in">
     <div>
+      <p class="empty-hint" id="empty-hint" data-editor>아직 빈 명함입니다. 오른쪽 위 <b>내 명함으로 바꾸기</b>를 눌러 칸을 채우면 이 화면이 내 명함으로 바뀝니다.</p>
       <p class="kicker" id="hero-title" data-t="title"></p>
       <h1 id="name" data-t="name"></h1>
       <p class="tagline" id="hero-tagline" data-t="tagline"></p>
@@ -359,11 +362,11 @@ body.panel-open{overflow:hidden}
     <div class="grp">
       <h3>내가 하는 일 3가지</h3>
       <label class="fld"><span>일 1 제목</span><input id="in-w1t" type="text" autocomplete="off" placeholder="예) 주 1회 꽃 수업"></label>
-      <label class="fld"><span>일 1 설명 (두 줄까지)</span><textarea id="in-w1d" rows="2"></textarea></label>
+      <label class="fld"><span>일 1 설명 (두 줄까지)</span><textarea id="in-w1d" rows="3"></textarea></label>
       <label class="fld"><span>일 2 제목</span><input id="in-w2t" type="text" autocomplete="off"></label>
-      <label class="fld"><span>일 2 설명 (두 줄까지)</span><textarea id="in-w2d" rows="2"></textarea></label>
+      <label class="fld"><span>일 2 설명 (두 줄까지)</span><textarea id="in-w2d" rows="3"></textarea></label>
       <label class="fld"><span>일 3 제목</span><input id="in-w3t" type="text" autocomplete="off"></label>
-      <label class="fld"><span>일 3 설명 (두 줄까지)</span><textarea id="in-w3d" rows="2"></textarea></label>
+      <label class="fld"><span>일 3 설명 (두 줄까지)</span><textarea id="in-w3d" rows="3"></textarea></label>
       <p class="hint">설명은 두 줄 안에서 짧게 쓰면 읽기 좋습니다. 비워 둔 칸은 화면에 나오지 않습니다.</p>
     </div>
 
@@ -549,6 +552,10 @@ body.panel-open{overflow:hidden}
 
     var name = txt(S.name);
     var title = txt(S.title);
+
+    /* empty-state hint (editor only) */
+    var eh = $("#empty-hint");
+    if (eh) eh.style.display = name ? "none" : "block";
 
     /* hero */
     show($("#hero-title"), !!title);
@@ -747,6 +754,7 @@ body.panel-open{overflow:hidden}
     var cb = clone.querySelector("body"); if (cb) { cb.classList.remove("panel-open"); }
     var ct = clone.querySelector("title"); if (ct) ct.textContent = document.title;
     var an = clone.querySelector("#ava-note"); if (an && an.parentNode) an.parentNode.removeChild(an);
+    var ehl = clone.querySelector("#empty-hint"); if (ehl && ehl.parentNode) ehl.parentNode.removeChild(ehl);
     var ogu = clone.querySelector('meta[property="og:url"]');
     if (ogu && ogu.parentNode) ogu.parentNode.removeChild(ogu);
     var ogi = clone.querySelector('meta[property="og:image"]');
